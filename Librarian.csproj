@@ -17,7 +17,18 @@
     <PackageReference Include="AngleSharp" Version="1.0.4" />
     <PackageReference Include="AngleSharp.Scripting.JavaScript" Version="0.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="7.0.9" />
+    <PackageReference Include="Microsoft.Kiota.Abstractions" Version="1.3.3" />
+    <PackageReference Include="Microsoft.Kiota.Http.HttpClientLibrary" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Form" Version="1.0.1" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Json" Version="1.0.8" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Multipart" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Text" Version="1.0.3" />
   </ItemGroup>
+  
+  <Target Name="ClientGenerationOrdbokeneNo" BeforeTargets="Build">
+    <Exec Command="curl -o Api/Clients/Documents/ordbokene-no-api.yml https://ordbokene.no/api/swagger.yml"/>
+    <Exec Command="dotnet kiota generate --language CSharp --openapi Api/Clients/Documents/ordbokene-no-api.yml --namespace-name Librarian.Api.Clients --class-name OrdbokenClient --output Api/Clients/OrbokenClient"/>
+  </Target>
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
@@ -26,10 +37,13 @@
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
-
+  <ItemGroup>
+    <Folder Include="Api\Clients\Documents\" />
+    <Folder Include="ClientApp\src\components\" />
+  </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ClientApp\src\components\" />
+    <_ContentIncludedByDefault Remove="Api\Clients\OrbokenClient.cs\kiota-lock.json" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

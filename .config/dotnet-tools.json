@@ -2,10 +2,10 @@
   "version": 1,
   "isRoot": true,
   "tools": {
-    "microsoft.openapi.kiota": {
-      "version": "1.6.1",
+    "microsoft.dotnet-openapi": {
+      "version": "7.0.11",
       "commands": [
-        "kiota"
+        "dotnet-openapi"
       ]
     }
   }

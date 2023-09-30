@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.Json;
 using Librarian.Api.Clients;
 
 namespace Librarian.Api.No;
@@ -20,7 +21,14 @@ public class NorwegianDefinitionProvider
             Scope.ExactLemma | Scope.InflectedForms | Scope.FullTextSearch, CancellationToken.None);
         
         Debug.Assert(res.Bookmaal != null);
-        
-        return string.Join(",", res.Bookmaal);
+
+        if (res.Bookmaal.Count == 0)
+            return "NOT FOUND";
+
+        var id = res.Bookmaal.First();
+
+        var article = await _client.GetArticleAsync(Dictionary.Bokmaal, id, CancellationToken.None);
+
+        return JsonSerializer.Serialize(article);
     }
 }

@@ -26,12 +26,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="7.0.9" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.0.5" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <OpenApiReference Include="Api/Clients/Documents/ordbok-api.yml" Namespace="Librarian.Api.Clients" ClassName="OrdbokClient"/>
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

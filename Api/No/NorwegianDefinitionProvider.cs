@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Librarian.Api.Clients;
 using Librarian.Api.Models;
+using Inflection = Librarian.Api.Clients.Inflection;
 
 namespace Librarian.Api.No;
 
@@ -63,30 +64,30 @@ public class NorwegianDefinitionProvider
 
         return wordClass switch
         {
-            "m1" => new NounDefinition(lemma.Value, Grammar.Article.Male),
-            "f1" => new NounDefinition(lemma.Value, Grammar.Article.Female),
-            "n1" => new NounDefinition(lemma.Value, Grammar.Article.Neutral),
+            "m1" => new NounDefinition(article.ArticleId, lemma.Value, Grammar.Article.Male),
+            "f1" => new NounDefinition(article.ArticleId, lemma.Value, Grammar.Article.Female),
+            "n1" => new NounDefinition(article.ArticleId, lemma.Value, Grammar.Article.Neutral),
             "verb"
                 => new VerbDefinition(
+                    article.ArticleId,
                     lemma.Value,
                     ToInflectionModel(lemma.Paradigms.First().Inflections)
                 ),
-            _ => new UnknownDefinition(lemma.Value),
+            _ => new UnknownDefinition(article.ArticleId, lemma.Value),
         };
     }
 
-    private static IDictionary<string, string> ToInflectionModel(
+    private static ICollection<Models.Inflection> ToInflectionModel(
         IEnumerable<Inflection> inflections
     )
     {
-        var result = new Dictionary<string, string>();
+        var result = new List<Models.Inflection>();
 
         foreach (var inflection in inflections)
         {
-            foreach (var tag in inflection.Tags)
-            {
-                result[tag] = inflection.WordForm;
-            }
+            result.AddRange(
+                inflection.Tags.Select(tag => new Models.Inflection(tag, inflection.WordForm))
+            );
         }
 
         return result;

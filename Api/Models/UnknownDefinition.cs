@@ -2,11 +2,13 @@ namespace Librarian.Api.Models;
 
 public class UnknownDefinition : IDefinition
 {
+    public int ArticleId { get; }
     public string Lemma { get; }
-    public WordClass WordClass => WordClass.Unknown;
+    public string Class => WordClass.Unknown;
 
-    public UnknownDefinition(string lemma)
+    public UnknownDefinition(int articleId, string lemma)
     {
+        ArticleId = articleId;
         Lemma = lemma;
     }
 }

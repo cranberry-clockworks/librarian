@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { page } from "$app/stores";
+    import {page} from "$app/stores";
     import axios from "axios";
-    
+
     async function search(word: string | null) {
         let client = axios.create({baseURL: '/api'});
         let response = await client.get(`/definition/${word}`);
@@ -12,10 +12,10 @@
 
 <p>
     {#await search($page.url.searchParams.get("q"))}
-    Loading...
+        Loading...
     {:then word}
-    The word is {word}
+        The word is {word}
     {:catch error}
-    There is an error: ${error}
+        There is an error: ${error}
     {/await}
 </p>

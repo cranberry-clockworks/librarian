@@ -1,8 +1,8 @@
 namespace Librarian.Api.Models;
 
-public enum WordClass
+public static class WordClass
 {
-    Unknown,
-    Noun,
-    Verb
+    public const string Unknown = nameof(Unknown);
+    public const string Noun = nameof(Noun);
+    public const string Verb = nameof(Verb);
 }

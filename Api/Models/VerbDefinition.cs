@@ -2,15 +2,19 @@ namespace Librarian.Api.Models;
 
 public class VerbDefinition : IDefinition
 {
+    public int ArticleId { get; }
     public string Lemma { get; }
 
-    public IDictionary<string, string> Inflections { get; }
+    public ICollection<Inflection> Inflections { get; }
 
-    public WordClass WordClass => WordClass.Verb;
+    public string Class => WordClass.Verb;
 
-    public VerbDefinition(string lemma, IDictionary<string, string> inflections)
+    public VerbDefinition(int articleId, string lemma, ICollection<Inflection> inflections)
     {
+        ArticleId = articleId;
         Lemma = lemma;
         Inflections = inflections;
     }
 }
+
+public record Inflection(string Type, string Word);

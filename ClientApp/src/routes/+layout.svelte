@@ -1,5 +1,5 @@
 <nav>
-    <form method="get" action="/search">
+    <form action="/search" method="get">
         <input name="q" placeholder="Enter a word to search">
     </form>
 </nav>

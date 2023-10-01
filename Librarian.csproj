@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Api\Clients\Documents\" />
     <Folder Include="ClientApp\src\components\" />
   </ItemGroup>
 

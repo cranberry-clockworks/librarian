@@ -14,8 +14,10 @@ var app = builder.Build();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-app.MapGet("/api/definition/{word}",
+app.MapGet(
+    "/api/definition/{word}",
     async ([FromRouteAttribute] string word, NorwegianDefinitionProvider pr) =>
-        await pr.GetDefinitionsAsync(word));
+        await pr.GetDefinitionsAsync(word, 3)
+);
 
 app.Run();

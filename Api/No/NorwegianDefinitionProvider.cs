@@ -1,18 +1,15 @@
 using System.Diagnostics;
-using Librarian.Api.Clients;
-using Librarian.Api.Models;
-using Inflection = Librarian.Api.Clients.Inflection;
 
 namespace Librarian.Api.No;
 
 public class NorwegianDefinitionProvider
 {
-    private readonly OrdbokClient _client;
+    private readonly Clients.OrdbokClient _client;
     private readonly ILogger<NorwegianDefinitionProvider> _logger;
 
     public NorwegianDefinitionProvider(
         ILogger<NorwegianDefinitionProvider> logger,
-        OrdbokClient client
+        Clients.OrdbokClient client
     )
     {
         _logger = logger;
@@ -27,9 +24,9 @@ public class NorwegianDefinitionProvider
     {
         var searchResult = await _client.SearchArticlesAsync(
             word,
-            Dictionary.Bokmaal,
+            Clients.Dictionary.Bokmaal,
             Clients.WordClass.Any,
-            Scope.ExactLemma | Scope.InflectedForms | Scope.FullTextSearch,
+            Clients.Scope.ExactLemma | Clients.Scope.InflectedForms | Clients.Scope.FullTextSearch,
             token
         );
 
@@ -39,7 +36,11 @@ public class NorwegianDefinitionProvider
 
         foreach (var articleId in searchResult.Bookmaal.Take(limit))
         {
-            var article = await _client.GetArticleAsync(Dictionary.Bokmaal, articleId, token);
+            var article = await _client.GetArticleAsync(
+                Clients.Dictionary.Bokmaal,
+                articleId,
+                token
+            );
             var definition = ToDefinition(article);
             if (definition != null)
             {
@@ -50,7 +51,7 @@ public class NorwegianDefinitionProvider
         return result;
     }
 
-    private IDefinition? ToDefinition(Article article)
+    private Models.IDefinition? ToDefinition(Clients.Article article)
     {
         var lemma = article.Lemmas.FirstOrDefault();
 
@@ -64,21 +65,31 @@ public class NorwegianDefinitionProvider
 
         return wordClass switch
         {
-            "m1" => new NounDefinition(article.ArticleId, lemma.Value, Grammar.Article.Male),
-            "f1" => new NounDefinition(article.ArticleId, lemma.Value, Grammar.Article.Female),
-            "n1" => new NounDefinition(article.ArticleId, lemma.Value, Grammar.Article.Neutral),
+            "m1" => new Models.NounDefinition(article.ArticleId, lemma.Value, Grammar.Article.Male),
+            "f1"
+                => new Models.NounDefinition(
+                    article.ArticleId,
+                    lemma.Value,
+                    Grammar.Article.Female
+                ),
+            "n1"
+                => new Models.NounDefinition(
+                    article.ArticleId,
+                    lemma.Value,
+                    Grammar.Article.Neutral
+                ),
             "verb"
-                => new VerbDefinition(
+                => new Models.VerbDefinition(
                     article.ArticleId,
                     lemma.Value,
                     ToInflectionModel(lemma.Paradigms.First().Inflections)
                 ),
-            _ => new UnknownDefinition(article.ArticleId, lemma.Value),
+            _ => new Models.UnknownDefinition(article.ArticleId, lemma.Value),
         };
     }
 
     private static ICollection<Models.Inflection> ToInflectionModel(
-        IEnumerable<Inflection> inflections
+        IEnumerable<Clients.Inflection> inflections
     )
     {
         var result = new List<Models.Inflection>();

@@ -16,7 +16,7 @@ public class NorwegianDefinitionProvider
         _client = client;
     }
 
-    public async Task<ICollection<object>> GetDefinitionsAsync(
+    public async Task<ICollection<Models.IDefinition>> GetDefinitionsAsync(
         string word,
         int limit = 3,
         CancellationToken token = default
@@ -32,7 +32,7 @@ public class NorwegianDefinitionProvider
 
         Debug.Assert(searchResult.Bookmaal != null);
 
-        var result = new List<object>();
+        var result = new List<Models.IDefinition>();
 
         foreach (var articleId in searchResult.Bookmaal.Take(limit))
         {

@@ -4,8 +4,6 @@ public class VerbDefinition : Definition
 {
     public ICollection<Inflection> Inflections { get; }
 
-    public override string Class => WordClass.Verb;
-
     public VerbDefinition(int articleId, string lemma, ICollection<Inflection> inflections)
         : base(articleId, lemma)
     {

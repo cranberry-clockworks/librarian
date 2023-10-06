@@ -14,6 +14,7 @@ builder.Services.AddTransient<NorwegianDefinitionProvider>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o =>
 {
+    o.SupportNonNullableReferenceTypes();
     o.UseOneOfForPolymorphism();
     o.EnableAnnotations(
         enableAnnotationsForPolymorphism: true,

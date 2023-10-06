@@ -1,14 +1,9 @@
 namespace Librarian.Api.Models;
 
-public class UnknownDefinition : IDefinition
+public class UnknownDefinition : Definition
 {
-    public int ArticleId { get; }
-    public string Lemma { get; }
-    public string Class => WordClass.Unknown;
+    public override string Class => WordClass.Unknown;
 
     public UnknownDefinition(int articleId, string lemma)
-    {
-        ArticleId = articleId;
-        Lemma = lemma;
-    }
+        : base(articleId, lemma) { }
 }

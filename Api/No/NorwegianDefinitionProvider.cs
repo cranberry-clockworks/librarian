@@ -16,7 +16,7 @@ public class NorwegianDefinitionProvider
         _client = client;
     }
 
-    public async Task<ICollection<Models.IDefinition>> GetDefinitionsAsync(
+    public async Task<ICollection<Models.Definition>> GetDefinitionsAsync(
         string word,
         int limit = 3,
         CancellationToken token = default
@@ -32,7 +32,7 @@ public class NorwegianDefinitionProvider
 
         Debug.Assert(searchResult.Bookmaal != null);
 
-        var result = new List<Models.IDefinition>();
+        var result = new List<Models.Definition>();
 
         foreach (var articleId in searchResult.Bookmaal.Take(limit))
         {
@@ -51,7 +51,7 @@ public class NorwegianDefinitionProvider
         return result;
     }
 
-    private Models.IDefinition? ToDefinition(Clients.Article article)
+    private Models.Definition? ToDefinition(Clients.Article article)
     {
         var lemma = article.Lemmas.FirstOrDefault();
 

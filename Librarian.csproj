@@ -20,7 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="ClientApp\src\components\"/>
         <Folder Include="ClientApp\src\lib\generated\" />
     </ItemGroup>
 

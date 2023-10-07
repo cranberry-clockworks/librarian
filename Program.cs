@@ -14,6 +14,7 @@ builder.Services.AddTransient<NorwegianDefinitionProvider>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o =>
 {
+    o.SwaggerDoc("v1", new OpenApiInfo { Title = "Server-side API", Version = "v1" });
     o.SupportNonNullableReferenceTypes();
     o.UseOneOfForPolymorphism();
     o.EnableAnnotations(
@@ -36,6 +37,13 @@ app.MapGet(
     )
     // .Produces<NounDefinition>(StatusCodes.Status200OK)
     .WithName("Define")
-    .WithOpenApi();
+    .WithOpenApi(
+        operation =>
+            new OpenApiOperation(operation)
+            {
+                Summary = "Defines the word",
+                Tags = new List<OpenApiTag> { new() { Name = "Definitions" } }
+            }
+    );
 
 app.Run();

@@ -1,0 +1,86 @@
+openapi: 3.0.1
+info:
+  title: Server-side API
+  version: v1
+paths:
+  '/api/definition/{word}':
+    get:
+      tags:
+        - Definitions
+      summary: Defines the word
+      operationId: Define
+      parameters:
+        - name: word
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+      requestBody:
+        content: { }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/NounDefinition'
+                    - $ref: '#/components/schemas/VerbDefinition'
+                    - $ref: '#/components/schemas/UnknownDefinition'
+components:
+  schemas:
+    Definition:
+      required:
+        - $type
+      type: object
+      properties:
+        $type:
+          type: string
+        articleId:
+          type: integer
+          format: int32
+          readOnly: true
+        lemma:
+          type: string
+          readOnly: true
+      additionalProperties: false
+      discriminator:
+        propertyName: $type
+        mapping:
+          Noun: '#/components/schemas/NounDefinition'
+          Verb: '#/components/schemas/VerbDefinition'
+          Unknown: '#/components/schemas/UnknownDefinition'
+    Inflection:
+      type: object
+      properties:
+        type:
+          type: string
+        word:
+          type: string
+      additionalProperties: false
+    NounDefinition:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Definition'
+      properties:
+        article:
+          type: string
+      additionalProperties: false
+    UnknownDefinition:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Definition'
+      additionalProperties: false
+    VerbDefinition:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Definition'
+      properties:
+        inflections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Inflection'
+      additionalProperties: false

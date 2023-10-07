@@ -1,11 +1,12 @@
 <script lang="ts">
     import {page} from "$app/stores";
-    import axios from "axios";
-
+    import {DefinitionsService} from "$lib/generated/client";
+    
     async function search(word: string | null) {
-        let client = axios.create({baseURL: '/api'});
-        let response = await client.get(`/definition/${word}`);
-        return response.data;
+        if (word === null)
+            return;
+        
+        let array = await DefinitionsService.define(word);
     }
 </script>
 

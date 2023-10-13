@@ -30,6 +30,28 @@ paths:
                     - $ref: '#/components/schemas/NounDefinition'
                     - $ref: '#/components/schemas/VerbDefinition'
                     - $ref: '#/components/schemas/UnknownDefinition'
+  '/api/translation/{phrase}':
+    get:
+      tags:
+        - Translations
+      summary: Translates the phrase
+      operationId: Translate
+      parameters:
+        - name: phrase
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+      requestBody:
+        content: { }
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
 components:
   schemas:
     Definition:

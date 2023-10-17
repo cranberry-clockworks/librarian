@@ -4,21 +4,21 @@ using Microsoft.Extensions.Options;
 
 namespace Librarian.Api.No;
 
-public class NorwegianTranslationServiceOption
+public class TranslationServiceConfiguration
 {
-    public const string SectionName = "NorwegianTranslationService";
+    public const string SectionName = "Norwegian:Translation";
     public string DeepLApiKey { get; set; } = string.Empty;
 }
 
-public class NorwegianTranslationService
+public class TranslationService
 {
-    private readonly ILogger<NorwegianTranslationService> _logger;
+    private readonly ILogger<TranslationService> _logger;
     private readonly Translator _translator;
 
-    public NorwegianTranslationService(
-        ILogger<NorwegianTranslationService> logger,
+    public TranslationService(
+        ILogger<TranslationService> logger,
         HttpClient client,
-        IOptions<NorwegianTranslationServiceOption> options
+        IOptions<TranslationServiceConfiguration> options
     )
     {
         if (string.IsNullOrEmpty(options.Value.DeepLApiKey))

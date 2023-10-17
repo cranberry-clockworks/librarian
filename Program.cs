@@ -1,21 +1,24 @@
 using Librarian.Api.Clients;
-using Librarian.Api.Models;
 using Librarian.Api.No;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<NorwegianTranslationServiceOption>(
-    builder.Configuration.GetSection(NorwegianTranslationServiceOption.SectionName)
+builder.Services.Configure<TranslationServiceConfiguration>(
+    builder.Configuration.GetSection(TranslationServiceConfiguration.SectionName)
+);
+
+builder.Services.Configure<PronunciationServiceConfiguration>(
+    builder.Configuration.GetSection(PronunciationServiceConfiguration.Section)
 );
 
 builder.Services.AddHttpClient();
 
 builder.Services.AddTransient<OrdbokClient>();
 builder.Services.AddTransient<NorwegianDefinitionProvider>();
-builder.Services.AddTransient<NorwegianTranslationService>();
+builder.Services.AddTransient<TranslationService>();
+builder.Services.AddTransient<PronunciationService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o =>
@@ -54,7 +57,7 @@ app.MapGet(
 
 app.MapGet(
         "/api/translation/{phrase}",
-        ([FromRouteAttribute] string phrase, NorwegianTranslationService service) =>
+        ([FromRouteAttribute] string phrase, TranslationService service) =>
             service.TranslateAsync(phrase, CancellationToken.None)
     )
     .WithName("Translate")
@@ -66,4 +69,15 @@ app.MapGet(
                 Tags = new List<OpenApiTag> { new() { Name = "Translations" } }
             }
     );
+
+app.MapGet(
+    "/api/pronunciation/{phrase}",
+    async ([FromRouteAttribute] string phrase, PronunciationService service) =>
+    {
+        var bytes = await service.PronounceAsync(phrase, CancellationToken.None);
+        File.WriteAllBytes($"/Users/Knight/Desktop/{phrase}.mp3", bytes);
+        return "Done";
+    }
+);
+
 app.Run();

@@ -52,6 +52,28 @@ paths:
             text/plain:
               schema:
                 type: string
+  '/api/pronunciation/{phrase}':
+    get:
+      tags:
+        - Pronunciations
+      summary: Pronounces the phrase
+      operationId: Pronounce
+      parameters:
+        - name: phrase
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+      requestBody:
+        content: { }
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
 components:
   schemas:
     Definition:

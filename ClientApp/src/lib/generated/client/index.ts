@@ -14,4 +14,5 @@ export type { UnknownDefinition } from './models/UnknownDefinition';
 export type { VerbDefinition } from './models/VerbDefinition';
 
 export { DefinitionsService } from './services/DefinitionsService';
+export { PronunciationsService } from './services/PronunciationsService';
 export { TranslationsService } from './services/TranslationsService';

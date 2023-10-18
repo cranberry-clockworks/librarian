@@ -2,7 +2,7 @@
     import type {NounDefinition, UnknownDefinition, VerbDefinition} from "$lib/generated/client";
     import NounDefinitionBody from "./NounDefinitionBody.svelte";
     import VerbDefinitionBody from "./VerbDefinitionBody.svelte";
-    import UknownDefinitionBody from "./UknownDefinitionBody.svelte";
+    import UnknownDefinitionBody from "./UnknownDefinitionBody.svelte";
     
     export let definition: NounDefinition | VerbDefinition | UnknownDefinition
 </script>
@@ -12,7 +12,7 @@
     {:else if definition.$type === "Verb"}
         <VerbDefinitionBody definition={definition}/>
     {:else }
-        <UknownDefinitionBody definition={definition}/>
+        <UnknownDefinitionBody definition={definition}/>
     {/if}
 </div>
 

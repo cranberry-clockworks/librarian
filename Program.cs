@@ -71,13 +71,21 @@ app.MapGet(
     );
 
 app.MapGet(
-    "/api/pronunciation/{phrase}",
-    async ([FromRouteAttribute] string phrase, PronunciationService service) =>
-    {
-        var bytes = await service.PronounceAsync(phrase, CancellationToken.None);
-        File.WriteAllBytes($"/Users/Knight/Desktop/{phrase}.mp3", bytes);
-        return "Done";
-    }
-);
+        "/api/pronunciation/{phrase}",
+        async ([FromRouteAttribute] string phrase, PronunciationService service) =>
+        {
+            var bytes = await service.PronounceAsync(phrase, CancellationToken.None);
+            return $"data:audio/mpeg;base64,{Convert.ToBase64String(bytes)}";
+        }
+    )
+    .WithName("Pronounce")
+    .WithOpenApi(
+        operation =>
+            new OpenApiOperation(operation)
+            {
+                Summary = "Pronounces the phrase",
+                Tags = new List<OpenApiTag> { new() { Name = "Pronunciations" } }
+            }
+    );
 
 app.Run();

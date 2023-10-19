@@ -2,33 +2,38 @@
     export let fetch: () => Promise<string>;
     
     let audio: HTMLAudioElement | undefined;
-    let playing = false;
+    
+    let playing = false
     
     async function toggle()
     {
-        playing = !playing;
-        
-        if (playing)
+        if (!playing)
         {
             if (audio === undefined)
             {
                 let data = await fetch();
                 audio = new Audio(data);
+                audio.addEventListener(
+                    'ended',
+                    () => { playing = false; }
+                )
             }
             
+            playing = true;
             await audio.play();
         }
         else
         {
+            playing = false;
             audio?.pause();
         }
     }
 </script>
 
 <button on:click={toggle}>
-    {#if playing}
-        <span>⏸️</span>
+    {#if !playing}
+        <span>Pronounce</span>
     {:else}
-        <span>▶️</span>
+        <span>Pause</span>
     {/if}
 </button>

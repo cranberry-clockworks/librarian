@@ -1,6 +1,6 @@
 <script lang="ts">
+    import DefinitionHeader from "./DefinitionHeader.svelte";
     import type {VerbDefinition} from "$lib/generated/client";
-    import DefinitionTitle from "./DefinitionTitle.svelte";
 
     export let definition: VerbDefinition
     
@@ -9,7 +9,7 @@
     }
 </script>
 
-<DefinitionTitle lemma={definition.lemma} wordClass="verb"/>
+<DefinitionHeader lemma={definition.lemma} wordClass="verb"/>
 
 <table>
     <tr>

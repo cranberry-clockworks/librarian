@@ -3,6 +3,7 @@
     import NounDefinitionBody from "./NounDefinitionBody.svelte";
     import VerbDefinitionBody from "./VerbDefinitionBody.svelte";
     import UnknownDefinitionBody from "./UnknownDefinitionBody.svelte";
+    import {cards} from "$lib/state";
     
     export let definition: NounDefinition | VerbDefinition | UnknownDefinition
 </script>
@@ -14,6 +15,7 @@
     {:else }
         <UnknownDefinitionBody definition={definition}/>
     {/if}
+    <button on:click={() => cards.update(c => [...c, {title: "sss", front: "front", back: "back", media: ["s"]}])}>Add</button>
 </div>
 
 <style>

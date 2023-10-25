@@ -17,7 +17,7 @@
         Loading...
     {:then definitions}
         <div>
-            {#each definitions as definition, i}
+            {#each definitions as definition}
                 <Definition definition={definition} />
             {/each}
         </div>

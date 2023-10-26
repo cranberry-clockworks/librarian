@@ -1,5 +1,4 @@
 <script lang="ts">
-    import DefinitionHeader from "./DefinitionHeader.svelte";
     import type {VerbDefinition} from "$lib/generated/client";
 
     export let definition: VerbDefinition
@@ -8,8 +7,6 @@
         return type.replaceAll("<", "").replaceAll(">", "")
     }
 </script>
-
-<DefinitionHeader lemma={definition.lemma} wordClass="verb"/>
 
 <table>
     <tr>
@@ -51,5 +48,4 @@
     tr:hover {
         background-color: #f5f5f5;
     }
-
 </style>

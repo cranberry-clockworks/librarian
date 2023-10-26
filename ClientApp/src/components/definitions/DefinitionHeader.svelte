@@ -2,18 +2,16 @@
     import {PronunciationsService, TranslationsService} from "$lib/generated/client/index.js";
     import PronunciationButton from "./PronunciationButton.svelte";
 
-    export let article = ""
-    export let lemma = "Lemma"
-    export let wordClass = "Unknown"
-    export let translation = ""
-    export let audio = ""
+    export let phrase = "en Lemma";
+    export let wordClass = "Unknown";
     
-    let phrase = (article.length > 0 ? article + " " : "") + lemma;
+    let translation = ""
+    let audio = ""
     
-    async function fetchAudio() : Promise<string>
-    {
-        if (audio.length > 0)
+    async function fetchAudio() : Promise<string> {
+        if (audio.length > 0) {
             return audio;
+        }
         
         audio = await PronunciationsService.pronounce(phrase);
         return audio;
@@ -34,6 +32,7 @@
     {:else}
         <button on:click={fetchTranslation}>Translate</button>
     {/if}
+    <slot/>
 </div>
 
 <style>

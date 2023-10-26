@@ -1,21 +1,24 @@
 <script lang="ts">
     import type {NounDefinition, UnknownDefinition, VerbDefinition} from "$lib/generated/client";
-    import NounDefinitionBody from "./NounDefinitionBody.svelte";
     import VerbDefinitionBody from "./VerbDefinitionBody.svelte";
-    import UnknownDefinitionBody from "./UnknownDefinitionBody.svelte";
-    import {cards} from "$lib/state";
+    import DefinitionHeader from "./DefinitionHeader.svelte";
     
     export let definition: NounDefinition | VerbDefinition | UnknownDefinition
+    
+    function getPhraseForNoun(definition: NounDefinition) {
+        return `${definition.article} ${definition.lemma}`;
+    }
 </script>
 <div>
     {#if definition.$type === "Noun" }
-        <NounDefinitionBody definition={definition}/>
+        <DefinitionHeader phrase={getPhraseForNoun(definition)} wordClass="Noun"/>
     {:else if definition.$type === "Verb"}
-        <VerbDefinitionBody definition={definition}/>
+        <DefinitionHeader phrase="{definition.lemma}" wordClass="Verb" >
+            <VerbDefinitionBody definition={definition}/>
+        </DefinitionHeader>
     {:else }
-        <UnknownDefinitionBody definition={definition}/>
+        <DefinitionHeader phrase="Unknown" wordClass="Unknown"/>
     {/if}
-    <button on:click={() => cards.update(c => [...c, {title: "sss", front: "front", back: "back", media: ["s"]}])}>Add</button>
 </div>
 
 <style>

@@ -1,5 +1,7 @@
 <script lang="ts">
     import type {NounDefinition, UnknownDefinition, VerbDefinition} from "$lib/generated/client";
+    import {WordClass} from "$lib/definition";
+    
     import VerbDefinitionBody from "./VerbDefinitionBody.svelte";
     import DefinitionHeader from "./DefinitionHeader.svelte";
     
@@ -10,9 +12,9 @@
     }
 </script>
 <div>
-    {#if definition.$type === "Noun" }
+    {#if definition.$type === WordClass.Noun}
         <DefinitionHeader phrase={getPhraseForNoun(definition)} wordClass="Noun"/>
-    {:else if definition.$type === "Verb"}
+    {:else if definition.$type === WordClass.Verb}
         <DefinitionHeader phrase="{definition.lemma}" wordClass="Verb" >
             <VerbDefinitionBody definition={definition}/>
         </DefinitionHeader>

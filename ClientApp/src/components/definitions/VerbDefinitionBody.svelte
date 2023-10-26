@@ -12,11 +12,15 @@
     <tr>
         <th>Inflection</th>
         <th>Word</th>
+        <th>Export</th>
     </tr>
     {#each definition.inflections ?? [] as inflection}
         <tr>
             <td>{strip(inflection.type ?? "")}</td>
             <td>{inflection.word}</td>
+            <td>
+                <input type="checkbox"/>
+            </td>
         </tr>
     {/each}
 </table>

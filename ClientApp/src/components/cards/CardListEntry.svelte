@@ -1,13 +1,11 @@
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
     import type {Card} from "$lib/models";
-    
 
     export let card: Card;
     const dispatch = createEventDispatcher();
     
-    function removeButtonClicked()
-    {
+    function removeButtonClicked() {
         dispatch("removeButtonClicked", card.title);
     }
     

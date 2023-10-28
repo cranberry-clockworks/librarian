@@ -2,7 +2,7 @@
     import CardList from "../components/cards/CardList.svelte";
 </script>
 
-<div class="side">
+<div class="box">
     <CardList/>
 </div>
 
@@ -21,7 +21,7 @@
         font-size: 2em;
         width: 100%;
     }
-    .side {
+    .box {
         width: 200px;
         position: fixed;
         top: 0;

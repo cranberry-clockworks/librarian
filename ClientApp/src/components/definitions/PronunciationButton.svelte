@@ -1,5 +1,6 @@
 <script lang="ts">
     export let fetch: () => Promise<string>;
+    export let title = "Pronounce";
     
     let audio: HTMLAudioElement | undefined;
     
@@ -32,7 +33,7 @@
 
 <button on:click={toggle}>
     {#if !playing}
-        <span>Pronounce</span>
+        <span>{title}</span>
     {:else}
         <span>Pause</span>
     {/if}

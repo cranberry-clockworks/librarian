@@ -12,7 +12,7 @@
 </script>
 
 <div>
-    <span>{card.title}</span>
+    <a rel="external" href="/cards/{card.title}">{card.title}</a>
     <button on:click={removeButtonClicked}>Remove</button>
 </div>
 
@@ -22,5 +22,9 @@
     }
     div:hover button{
         visibility: visible;
+    }
+    a {
+        text-decoration: none;
+        color: inherit;
     }
 </style>

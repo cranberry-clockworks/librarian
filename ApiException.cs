@@ -1,13 +1,19 @@
 using System.Net;
 using System.Net.Http.Headers;
 
-namespace Librarian.Api.Clients;
+namespace Librarian;
 
 public class ApiException : Exception
 {
-    public ApiException(string message, HttpStatusCode statusCode, string response, HttpHeaders headers)
+    public ApiException(
+        string message,
+        HttpStatusCode statusCode,
+        string response,
+        HttpHeaders headers
+    )
         : base(
-            $"{message}\n\nStatus: {statusCode}\nResponse:\n{response[..(response.Length >= 512 ? 512 : response.Length)]}")
+            $"{message}\n\nStatus: {statusCode}\nResponse:\n{response[..(response.Length >= 512 ? 512 : response.Length)]}"
+        )
     {
         StatusCode = statusCode;
         Response = response;

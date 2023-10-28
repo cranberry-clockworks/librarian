@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Librarian.Api.Clients;
+namespace Librarian;
 
 internal static class UriExtension
 {
@@ -16,7 +16,10 @@ internal static class UriExtension
     /// <returns>
     ///     URI with query parameters. Example: <c>path?key1=value1&amp;key2=value2</c>
     /// </returns>
-    public static string BuildUriWithQueryParameters(string path, IEnumerable<(string, string?)> pairs)
+    public static string BuildUriWithQueryParameters(
+        string path,
+        IEnumerable<(string, string?)> pairs
+    )
     {
         var builder = new StringBuilder(path);
 

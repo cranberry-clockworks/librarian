@@ -74,8 +74,35 @@ paths:
             text/plain:
               schema:
                 type: string
+  /api/export:
+    post:
+      tags:
+        - Export
+      summary: Export cards
+      operationId: Export
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
 components:
   schemas:
+    Card:
+      type: object
+      properties:
+        front:
+          type: string
+        back:
+          type: string
+        media:
+          type: object
+          additionalProperties:
+            type: string
+      additionalProperties: false
     Definition:
       required:
         - $type
@@ -97,6 +124,16 @@ components:
           Noun: '#/components/schemas/NounDefinition'
           Verb: '#/components/schemas/VerbDefinition'
           Unknown: '#/components/schemas/UnknownDefinition'
+    ExportRequest:
+      type: object
+      properties:
+        deck:
+          type: string
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/Card'
+      additionalProperties: false
     Inflection:
       type: object
       properties:

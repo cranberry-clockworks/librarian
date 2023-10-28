@@ -2,14 +2,14 @@ using System.Diagnostics;
 
 namespace Librarian.Api.No;
 
-public class NorwegianDefinitionProvider
+public class DefinitionService
 {
-    private readonly Clients.OrdbokClient _client;
-    private readonly ILogger<NorwegianDefinitionProvider> _logger;
+    private readonly OrdbokClient _client;
+    private readonly ILogger<DefinitionService> _logger;
 
-    public NorwegianDefinitionProvider(
-        ILogger<NorwegianDefinitionProvider> logger,
-        Clients.OrdbokClient client
+    public DefinitionService(
+        ILogger<DefinitionService> logger,
+        OrdbokClient client
     )
     {
         _logger = logger;
@@ -24,9 +24,9 @@ public class NorwegianDefinitionProvider
     {
         var searchResult = await _client.SearchArticlesAsync(
             word,
-            Clients.Dictionary.Bokmaal,
-            Clients.WordClass.Any,
-            Clients.Scope.ExactLemma | Clients.Scope.InflectedForms | Clients.Scope.FullTextSearch,
+            Dictionary.Bokmaal,
+            WordClass.Any,
+            Scope.ExactLemma | Scope.InflectedForms | Scope.FullTextSearch,
             token
         );
 
@@ -37,7 +37,7 @@ public class NorwegianDefinitionProvider
         foreach (var articleId in searchResult.Bookmaal.Take(limit))
         {
             var article = await _client.GetArticleAsync(
-                Clients.Dictionary.Bokmaal,
+                Dictionary.Bokmaal,
                 articleId,
                 token
             );
@@ -51,7 +51,7 @@ public class NorwegianDefinitionProvider
         return result;
     }
 
-    private Models.Definition? ToDefinition(Clients.Article article)
+    private Models.Definition? ToDefinition(Article article)
     {
         var lemma = article.Lemmas.FirstOrDefault();
 
@@ -89,7 +89,7 @@ public class NorwegianDefinitionProvider
     }
 
     private static ICollection<Models.Inflection> ToInflectionModel(
-        IEnumerable<Clients.Inflection> inflections
+        IEnumerable<Inflection> inflections
     )
     {
         var result = new List<Models.Inflection>();

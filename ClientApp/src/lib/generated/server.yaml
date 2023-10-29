@@ -74,10 +74,10 @@ paths:
             text/plain:
               schema:
                 type: string
-  /api/export:
+  /api/anki/export:
     post:
       tags:
-        - Export
+        - Anki
       summary: Export cards
       operationId: Export
       requestBody:
@@ -89,6 +89,23 @@ paths:
       responses:
         '200':
           description: OK
+  /api/anki/decks:
+    get:
+      tags:
+        - Anki
+      summary: Get available decks
+      operationId: GetDecks
+      requestBody:
+        content: { }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
 components:
   schemas:
     Card:

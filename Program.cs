@@ -93,7 +93,7 @@ app.MapGet(
     );
 
 app.MapPost(
-        "/api/export",
+        "/api/anki/export",
         ([FromBody] ExportRequest request, AnkiService service) =>
             service.AddCards(request.Deck, request.Cards, CancellationToken.None)
     )
@@ -103,7 +103,18 @@ app.MapPost(
             new OpenApiOperation(operation)
             {
                 Summary = "Export cards",
-                Tags = new List<OpenApiTag> { new() { Name = "Export" } }
+                Tags = new List<OpenApiTag> { new() { Name = "Anki" } }
+            }
+    );
+
+app.MapGet("/api/anki/decks", (AnkiConnect client) => client.GetDecks(CancellationToken.None))
+    .WithName("GetDecks")
+    .WithOpenApi(
+        operation =>
+            new OpenApiOperation(operation)
+            {
+                Summary = "Get available decks",
+                Tags = new List<OpenApiTag> { new() { Name = "Anki" } }
             }
     );
 

@@ -15,7 +15,7 @@ export type { NounDefinition } from './models/NounDefinition';
 export type { UnknownDefinition } from './models/UnknownDefinition';
 export type { VerbDefinition } from './models/VerbDefinition';
 
+export { AnkiService } from './services/AnkiService';
 export { DefinitionsService } from './services/DefinitionsService';
-export { ExportService } from './services/ExportService';
 export { PronunciationsService } from './services/PronunciationsService';
 export { TranslationsService } from './services/TranslationsService';

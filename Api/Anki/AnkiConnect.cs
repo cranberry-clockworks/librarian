@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Mime;
@@ -43,7 +44,7 @@ public class AnkiConnect
             }
         };
 
-        return ExecuteAsync("store media file", data, token);
+        return ExecuteAsync<AnkiConnectResponse>("store media file", data, token);
     }
 
     public Task AddNoteAsync(string deck, string front, string back, CancellationToken token)
@@ -78,26 +79,35 @@ public class AnkiConnect
             }
         };
 
-        return ExecuteAsync("add note", command, token);
+        return ExecuteAsync<AnkiConnectResponse>("add note", command, token);
     }
 
     public Task SyncAsync(CancellationToken token)
     {
         _logger.LogInformation("Requesting synchronization");
         var command = new Dictionary<string, object> { { "action", "sync" }, { "version", 6 }, };
-        return ExecuteAsync("sync", command, token);
+        return ExecuteAsync<AnkiConnectResponse>("sync", command, token);
     }
 
-    // public Task<List<string>> GetDecks(CancellationToken token)
-    // {
-    //
-    // }
+    public async Task<List<string>> GetDecks(CancellationToken token)
+    {
+        _logger.LogInformation("Getting list decks");
+        var command = new Dictionary<string, object>
+        {
+            { "action", "deckNames" },
+            { "version", 6 }
+        };
 
-    private async Task ExecuteAsync(
+        var response = await ExecuteAsync<Decks>("deckNames", command, token);
+        return response.Response;
+    }
+
+    private async Task<T> ExecuteAsync<T>(
         string action,
         Dictionary<string, object> command,
         CancellationToken token
     )
+        where T : AnkiConnectResponse
     {
         var json = JsonSerializer.Serialize(command, _serializerOptions);
 
@@ -109,33 +119,32 @@ public class AnkiConnect
 
         var response = await _client.SendAsync(request, token);
 
-        if (response.StatusCode == HttpStatusCode.OK)
-            return;
+        // API returns error in a special field instead of the response code
+        Debug.Assert(response.StatusCode == HttpStatusCode.OK);
 
         var responseContent = await response.Content.ReadAsStringAsync(token);
         try
         {
-            var error = JsonSerializer.Deserialize<AnkiConnectResponse>(responseContent);
+            var result = JsonSerializer.Deserialize<T>(responseContent);
 
-            throw new ApiException(
-                $"Failed to perform action: {
-    action
-    }",
-                response.StatusCode,
-                error?.Error ?? string.Empty,
-                response.Headers
-            );
+            if (result?.Error != null)
+            {
+                throw new ApiException(
+                    $"Failed to perform action: {action}",
+                    response.StatusCode,
+                    result.Error ?? string.Empty,
+                    response.Headers
+                );
+            }
+
+            return result!;
         }
         catch
         {
             throw new ApiException(
-                $"Failed to perform action: {
-    action
-    }",
+                $"Failed to perform action: {action}",
                 response.StatusCode,
-                $"Failed to deserialize response: {
-    responseContent
-    }",
+                $"Failed to deserialize response: {responseContent}",
                 response.Headers
             );
         }
@@ -145,10 +154,13 @@ public class AnkiConnect
 
     private class AnkiConnectResponse
     {
-        [JsonPropertyName("response")]
-        public string Response { get; init; } = string.Empty;
-
         [JsonPropertyName("error")]
         public string? Error { get; init; }
+    }
+
+    private class Decks : AnkiConnectResponse
+    {
+        [JsonPropertyName("result")]
+        public List<string> Response { get; init; } = new();
     }
 }

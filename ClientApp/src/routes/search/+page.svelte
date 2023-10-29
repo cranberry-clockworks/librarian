@@ -1,6 +1,6 @@
 <script lang="ts">
     import {page} from "$app/stores";
-    import {DefinitionsService} from "$lib/generated/client";
+    import {AnkiService, DefinitionsService} from "$lib/generated/client";
     import Definition from "../../components/definitions/Definition.svelte";
     
     async function search(word: string | null) {

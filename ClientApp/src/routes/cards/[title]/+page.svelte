@@ -20,7 +20,7 @@
     <p class="box">{@html card.back}</p>
     
     <h2>Media</h2>
-    {#each Object.keys(card.media) as key (key)}
+    {#each Object.keys(card.media) as key}
         <PronunciationButton title={key} fetch={() => Promise.resolve(card.media[key])}/>
     {/each}
 {:else}

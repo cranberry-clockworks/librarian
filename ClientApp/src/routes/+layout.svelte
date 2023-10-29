@@ -2,17 +2,19 @@
     import CardList from "../components/cards/CardList.svelte";
 </script>
 
-<div class="box">
-    <CardList/>
-</div>
-
-<div class="main">
-    <nav>
-        <form action="/search" method="get">
-            <input name="q" placeholder="Enter a word to search">
-        </form>
-    </nav>
-    <slot/>
+<div class="row">
+    <div class="column left">
+        <CardList/>
+    </div>
+    
+    <div class="column right">
+        <nav>
+            <form action="/search" method="get">
+                <input name="q" placeholder="Enter a word to search">
+            </form>
+        </nav>
+        <slot/>
+    </div>
 </div>
 
 
@@ -21,18 +23,25 @@
         font-size: 2em;
         width: 100%;
     }
-    .box {
-        width: 200px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100%;
-        overflow: auto;
-        padding-left: 20px;
+    
+    .row {
+        display: flex;
     }
-    .main {
-        margin-left: 200px;
+    .column {
+        float: left;
+        margin-left: 10px;
+    }
+    .left {
+        width: 25%;
         
+    }
+    .right {
+        width: 75%;
+    }
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
     }
 </style>
 

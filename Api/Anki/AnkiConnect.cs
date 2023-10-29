@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
@@ -47,7 +48,7 @@ public class AnkiConnect
         return ExecuteAsync<AnkiConnectResponse>("store media file", data, token);
     }
 
-    public Task AddNoteAsync(string deck, string front, string back, CancellationToken token)
+    public async Task AddNoteAsync(string deck, string front, string back, CancellationToken token)
     {
         _logger.LogInformation("Adding new note to the deck: {Deck}", deck);
 
@@ -72,14 +73,26 @@ public class AnkiConnect
                                     { "Front", front },
                                     { "Back", back },
                                 }
-                            },
+                            }
                         }
                     }
                 }
             }
         };
 
-        return ExecuteAsync<AnkiConnectResponse>("add note", command, token);
+        try
+        {
+            _ = await ExecuteAsync<AnkiConnectResponse>("add note", command, token);
+        }
+        catch (ApiException e)
+        {
+            if (e.Response.Contains("duplicate"))
+            {
+                return;
+            }
+
+            throw;
+        }
     }
 
     public Task SyncAsync(CancellationToken token)
@@ -139,7 +152,7 @@ public class AnkiConnect
 
             return result!;
         }
-        catch
+        catch (JsonException)
         {
             throw new ApiException(
                 $"Failed to perform action: {action}",

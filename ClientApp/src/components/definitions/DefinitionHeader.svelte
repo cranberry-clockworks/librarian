@@ -36,6 +36,10 @@
         media[mainAudio] = await fetchAudio();
         
         const card = createCard(wordClass, phrase, translation, media, "");
+        
+        if ($cards.find(c => c.title === card.title)) {
+            return;
+        }
         cards.update(c => [...c, card]);
     }
 </script>

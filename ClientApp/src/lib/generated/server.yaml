@@ -27,9 +27,9 @@ paths:
                 type: array
                 items:
                   oneOf:
-                    - $ref: '#/components/schemas/NounDefinition'
-                    - $ref: '#/components/schemas/VerbDefinition'
-                    - $ref: '#/components/schemas/UnknownDefinition'
+                    - $ref: '#/components/schemas/Noun'
+                    - $ref: '#/components/schemas/Verb'
+                    - $ref: '#/components/schemas/Phrase'
   '/api/translation/{phrase}':
     get:
       tags:
@@ -127,10 +127,6 @@ components:
       properties:
         $type:
           type: string
-        articleId:
-          type: integer
-          format: int32
-          readOnly: true
         lemma:
           type: string
           readOnly: true
@@ -138,9 +134,9 @@ components:
       discriminator:
         propertyName: $type
         mapping:
-          Noun: '#/components/schemas/NounDefinition'
-          Verb: '#/components/schemas/VerbDefinition'
-          Unknown: '#/components/schemas/UnknownDefinition'
+          Noun: '#/components/schemas/Noun'
+          Verb: '#/components/schemas/Verb'
+          Phrase: '#/components/schemas/Phrase'
     ExportRequest:
       type: object
       properties:
@@ -159,7 +155,7 @@ components:
         word:
           type: string
       additionalProperties: false
-    NounDefinition:
+    Noun:
       type: object
       allOf:
         - $ref: '#/components/schemas/Definition'
@@ -167,12 +163,12 @@ components:
         article:
           type: string
       additionalProperties: false
-    UnknownDefinition:
+    Phrase:
       type: object
       allOf:
         - $ref: '#/components/schemas/Definition'
       additionalProperties: false
-    VerbDefinition:
+    Verb:
       type: object
       allOf:
         - $ref: '#/components/schemas/Definition'

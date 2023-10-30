@@ -4,6 +4,9 @@
 /* eslint-disable */
 
 import type { Definition } from './Definition';
+import type { Inflection } from './Inflection';
 
-export type UnknownDefinition = Definition;
+export type Verb = (Definition & {
+    inflections?: Array<Inflection>;
+});
 

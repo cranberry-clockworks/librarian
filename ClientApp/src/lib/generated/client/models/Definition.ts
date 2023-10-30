@@ -5,7 +5,6 @@
 
 export type Definition = {
     $type: string;
-    readonly articleId?: number;
     readonly lemma?: string;
 };
 

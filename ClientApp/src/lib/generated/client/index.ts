@@ -11,9 +11,9 @@ export type { Card } from './models/Card';
 export type { Definition } from './models/Definition';
 export type { ExportRequest } from './models/ExportRequest';
 export type { Inflection } from './models/Inflection';
-export type { NounDefinition } from './models/NounDefinition';
-export type { UnknownDefinition } from './models/UnknownDefinition';
-export type { VerbDefinition } from './models/VerbDefinition';
+export type { Noun } from './models/Noun';
+export type { Phrase } from './models/Phrase';
+export type { Verb } from './models/Verb';
 
 export { AnkiService } from './services/AnkiService';
 export { DefinitionsService } from './services/DefinitionsService';

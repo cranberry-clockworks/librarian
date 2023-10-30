@@ -1,13 +1,13 @@
 <script lang="ts">
-    import type {NounDefinition, UnknownDefinition, VerbDefinition} from "$lib/generated/client";
+    import type {Noun, Phrase, Verb} from "$lib/generated/client";
     import {WordClass} from "$lib/definition";
     
     import VerbDefinitionBody from "./VerbDefinitionBody.svelte";
     import DefinitionHeader from "./DefinitionHeader.svelte";
     
-    export let definition: NounDefinition | VerbDefinition | UnknownDefinition
+    export let definition: Noun | Verb | Phrase
     
-    function getPhraseForNoun(definition: NounDefinition) {
+    function getPhraseForNoun(definition: Noun) {
         return `${definition.article} ${definition.lemma}`;
     }
 </script>
@@ -19,7 +19,7 @@
             <VerbDefinitionBody definition={definition}/>
         </DefinitionHeader>
     {:else }
-        <DefinitionHeader phrase="Unknown" wordClass="Unknown"/>
+        <DefinitionHeader phrase="{definition.lemma}" wordClass="{definition.$type}"/>
     {/if}
 </div>
 

@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type {VerbDefinition} from "$lib/generated/client";
+    import type {Verb} from "$lib/generated/client";
 
-    export let definition: VerbDefinition
+    export let definition: Verb
     
     function strip(type: string) {
         return type.replaceAll("<", "").replaceAll(">", "")

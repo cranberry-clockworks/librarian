@@ -4,9 +4,6 @@
 /* eslint-disable */
 
 import type { Definition } from './Definition';
-import type { Inflection } from './Inflection';
 
-export type VerbDefinition = (Definition & {
-    inflections?: Array<Inflection>;
-});
+export type Phrase = Definition;
 

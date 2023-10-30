@@ -5,7 +5,7 @@
 
 import type { Definition } from './Definition';
 
-export type NounDefinition = (Definition & {
+export type Noun = (Definition & {
     article?: string;
 });
 

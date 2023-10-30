@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Librarian.Api.Models.Definitions;
 
 namespace Librarian.Api.No;
 
@@ -7,16 +8,13 @@ public class DefinitionService
     private readonly OrdbokClient _client;
     private readonly ILogger<DefinitionService> _logger;
 
-    public DefinitionService(
-        ILogger<DefinitionService> logger,
-        OrdbokClient client
-    )
+    public DefinitionService(ILogger<DefinitionService> logger, OrdbokClient client)
     {
         _logger = logger;
         _client = client;
     }
 
-    public async Task<ICollection<Models.Definition>> GetDefinitionsAsync(
+    public async Task<ICollection<Definition>> GetDefinitionsAsync(
         string word,
         int limit = 3,
         CancellationToken token = default
@@ -32,15 +30,11 @@ public class DefinitionService
 
         Debug.Assert(searchResult.Bookmaal != null);
 
-        var result = new List<Models.Definition>();
+        var result = new List<Definition>();
 
         foreach (var articleId in searchResult.Bookmaal.Take(limit))
         {
-            var article = await _client.GetArticleAsync(
-                Dictionary.Bokmaal,
-                articleId,
-                token
-            );
+            var article = await _client.GetArticleAsync(Dictionary.Bokmaal, articleId, token);
             var definition = ToDefinition(article);
             if (definition != null)
             {
@@ -48,10 +42,15 @@ public class DefinitionService
             }
         }
 
+        if (result.Count == 0)
+        {
+            result.Add(new Phrase(word));
+        }
+
         return result;
     }
 
-    private Models.Definition? ToDefinition(Article article)
+    private Definition? ToDefinition(Article article)
     {
         var lemma = article.Lemmas.FirstOrDefault();
 
@@ -65,39 +64,26 @@ public class DefinitionService
 
         return wordClass switch
         {
-            "m1" => new Models.NounDefinition(article.ArticleId, lemma.Value, Grammar.Article.Male),
-            "f1"
-                => new Models.NounDefinition(
-                    article.ArticleId,
-                    lemma.Value,
-                    Grammar.Article.Female
-                ),
-            "n1"
-                => new Models.NounDefinition(
-                    article.ArticleId,
-                    lemma.Value,
-                    Grammar.Article.Neutral
-                ),
-            "verb"
-                => new Models.VerbDefinition(
-                    article.ArticleId,
-                    lemma.Value,
-                    ToInflectionModel(lemma.Paradigms.First().Inflections)
-                ),
-            _ => new Models.UnknownDefinition(article.ArticleId, lemma.Value),
+            "m1" => new Noun(lemma.Value, Grammar.Article.Male),
+            "f1" => new Noun(lemma.Value, Grammar.Article.Female),
+            "n1" => new Noun(lemma.Value, Grammar.Article.Neutral),
+            "verb" => new Verb(lemma.Value, ToInflectionModel(lemma.Paradigms.First().Inflections)),
+            _ => new Phrase(lemma.Value),
         };
     }
 
-    private static ICollection<Models.Inflection> ToInflectionModel(
+    private static ICollection<Models.Definitions.Inflection> ToInflectionModel(
         IEnumerable<Inflection> inflections
     )
     {
-        var result = new List<Models.Inflection>();
+        var result = new List<Models.Definitions.Inflection>();
 
         foreach (var inflection in inflections)
         {
             result.AddRange(
-                inflection.Tags.Select(tag => new Models.Inflection(tag, inflection.WordForm))
+                inflection.Tags.Select(
+                    tag => new Models.Definitions.Inflection(tag, inflection.WordForm)
+                )
             );
         }
 

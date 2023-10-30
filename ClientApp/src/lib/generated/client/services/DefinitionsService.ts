@@ -2,9 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { NounDefinition } from '../models/NounDefinition';
-import type { UnknownDefinition } from '../models/UnknownDefinition';
-import type { VerbDefinition } from '../models/VerbDefinition';
+import type { Noun } from '../models/Noun';
+import type { Phrase } from '../models/Phrase';
+import type { Verb } from '../models/Verb';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -22,7 +22,7 @@ export class DefinitionsService {
     public static define(
         word: string,
         requestBody?: any,
-    ): CancelablePromise<Array<(NounDefinition | VerbDefinition | UnknownDefinition)>> {
+    ): CancelablePromise<Array<(Noun | Verb | Phrase)>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/definition/{word}',

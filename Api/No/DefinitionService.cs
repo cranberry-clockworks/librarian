@@ -67,7 +67,9 @@ public class DefinitionService
             "m1" => new Noun(lemma.Value, Grammar.Article.Male),
             "f1" => new Noun(lemma.Value, Grammar.Article.Female),
             "n1" => new Noun(lemma.Value, Grammar.Article.Neutral),
-            "verb" => new Verb(lemma.Value, ToInflectionModel(lemma.Paradigms.First().Inflections)),
+            "v1"
+            or "verb"
+                => new Verb(lemma.Value, ToInflectionModel(lemma.Paradigms.First().Inflections)),
             _ => new Phrase(lemma.Value),
         };
     }
@@ -87,6 +89,6 @@ public class DefinitionService
             );
         }
 
-        return result;
+        return result.DistinctBy(static x => $"{x.Type}{x.Word}").ToList();
     }
 }

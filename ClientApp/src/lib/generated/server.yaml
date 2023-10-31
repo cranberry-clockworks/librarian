@@ -27,9 +27,10 @@ paths:
                 type: array
                 items:
                   oneOf:
+                    - $ref: '#/components/schemas/Phrase'
                     - $ref: '#/components/schemas/Noun'
                     - $ref: '#/components/schemas/Verb'
-                    - $ref: '#/components/schemas/Phrase'
+                    - $ref: '#/components/schemas/Adjective'
   '/api/translation/{phrase}':
     get:
       tags:
@@ -108,6 +109,11 @@ paths:
                   type: string
 components:
   schemas:
+    Adjective:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Definition'
+      additionalProperties: false
     Card:
       type: object
       properties:
@@ -134,9 +140,10 @@ components:
       discriminator:
         propertyName: $type
         mapping:
+          Phrase: '#/components/schemas/Phrase'
           Noun: '#/components/schemas/Noun'
           Verb: '#/components/schemas/Verb'
-          Phrase: '#/components/schemas/Phrase'
+          Adjective: '#/components/schemas/Adjective'
     ExportRequest:
       type: object
       properties:

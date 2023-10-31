@@ -70,6 +70,7 @@ public class DefinitionService
             "v1"
             or "verb"
                 => new Verb(lemma.Value, ToInflectionModel(lemma.Paradigms.First().Inflections)),
+            "a1" => new Adjective(lemma.Value),
             _ => new Phrase(lemma.Value),
         };
     }

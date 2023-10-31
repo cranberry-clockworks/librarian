@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Adjective } from '../models/Adjective';
 import type { Noun } from '../models/Noun';
 import type { Phrase } from '../models/Phrase';
 import type { Verb } from '../models/Verb';
@@ -22,7 +23,7 @@ export class DefinitionsService {
     public static define(
         word: string,
         requestBody?: any,
-    ): CancelablePromise<Array<(Noun | Verb | Phrase)>> {
+    ): CancelablePromise<Array<(Phrase | Noun | Verb | Adjective)>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/definition/{word}',

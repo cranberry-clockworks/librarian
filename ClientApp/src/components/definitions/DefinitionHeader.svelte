@@ -4,6 +4,8 @@
     import {createCard, getNameForMedia} from "$lib/models";
     import {cards} from "$lib/state";
 
+    export let isSub = false;
+    
     export let phrase = "en Lemma";
     export let wordClass = "Unknown";
     
@@ -44,8 +46,8 @@
     }
 </script>
 <div style="margin-bottom: 10px">
-    <span class="lemma">{phrase}</span>
-    <span class="wordClass">{wordClass}</span>
+    <span class="lemma {isSub ? 'sub': ''}">{phrase}</span>
+    <span class="wordClass {isSub ? 'sub' : ''}">{wordClass}</span>
 </div>
 <div>
     <button on:click={AddCard}>Add</button>
@@ -60,11 +62,18 @@
 
 <style>
     .lemma {
-        font-size: xx-large;
+        font-size: 2em;
         margin-right: 10px;
+    }
+    .lemma.sub {
+        font-size: 1.5em;
     }
     .wordClass {
         text-transform: uppercase;
         margin-right: 10px;
+    }
+
+    .wordClass.sub {
+        font-size: 0.8em;
     }
 </style>

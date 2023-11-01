@@ -9,10 +9,12 @@
     }
 </script>
 
-<div>
-    <a href="/export">Export</a>
+<div class="main">
+    <div style="margin-bottom: 10px">
+        <a href="/export">Export</a>
+    </div>
     {#each $cards as card}
-        <CardListEntry card="{card}" on:removeButtonClicked={onRemoveButtonClicked}/>
+            <CardListEntry card="{card}" on:removeButtonClicked={onRemoveButtonClicked}/>
     {/each}
 </div>
 <style>
@@ -24,7 +26,7 @@
         font-weight: bold;
         color: inherit;
     }
-    div {
+    .main {
         border: thin solid black;
         border-radius: 5px;
         padding: 0 10px 10px 10px;

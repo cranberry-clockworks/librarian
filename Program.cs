@@ -23,6 +23,7 @@ builder.Services.Configure<PronunciationServiceConfiguration>(
 builder.Services.AddHttpClient();
 
 builder.Services.AddDefinitionService();
+builder.Services.AddTransient<TranslationService>();
 builder.Services.AddTransient<PronunciationService>();
 
 builder.Services.AddTransient<AnkiConnect>();

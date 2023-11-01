@@ -21,7 +21,7 @@ public class OrdbokClient
 
     public async Task<ArticleSearch> SearchArticlesAsync(
         string word,
-        Dictionary dictionarieses,
+        Dictionary dictionaries,
         WordClass wordClass,
         Scope scope,
         CancellationToken token
@@ -29,7 +29,7 @@ public class OrdbokClient
     {
         var uri = UriExtension.BuildUriWithQueryParameters(
             "/api/articles",
-            BuildArticleSearchQueryParameters(word, dictionarieses, wordClass, scope)
+            BuildArticleSearchQueryParameters(word, dictionaries, wordClass, scope)
         );
 
         using var request = new HttpRequestMessage(HttpMethod.Get, uri);
@@ -103,15 +103,15 @@ public class OrdbokClient
         return result;
     }
 
-    private IEnumerable<(string, string?)> BuildArticleSearchQueryParameters(
+    private static IEnumerable<(string, string?)> BuildArticleSearchQueryParameters(
         string word,
-        Dictionary dictionarieses,
+        Dictionary dictionaries,
         WordClass wordClass,
         Scope scope
     )
     {
         yield return ("w", Uri.EscapeDataString(word));
-        yield return ("dict", DictionariesToQueryParameterValue(dictionarieses));
+        yield return ("dict", DictionariesToQueryParameterValue(dictionaries));
         yield return ("wc", WordClassToQueryParameterValue(wordClass));
         yield return ("scope", ScopeToQueryParameterValue(scope));
     }

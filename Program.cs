@@ -1,9 +1,14 @@
+using System.ComponentModel.DataAnnotations;
 using Librarian;
 using Librarian.Api.Anki;
 using Librarian.Api.Models;
+using Librarian.Api.Models.Definitions;
 using Librarian.Api.No;
+using Librarian.Api.No.Definitions;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using WordClass = Librarian.Api.Models.WordClass;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +22,7 @@ builder.Services.Configure<PronunciationServiceConfiguration>(
 
 builder.Services.AddHttpClient();
 
-builder.Services.AddTransient<OrdbokClient>();
-builder.Services.AddTransient<DefinitionService>();
-builder.Services.AddTransient<TranslationService>();
+builder.Services.AddDefinitionService();
 builder.Services.AddTransient<PronunciationService>();
 
 builder.Services.AddTransient<AnkiConnect>();
@@ -44,24 +47,11 @@ app.UseSwagger();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-app.MapGet(
-        "/api/definition/{word}",
-        ([FromRoute] string word, DefinitionService pr) => pr.GetDefinitionsAsync(word, 3)
-    )
-    // .Produces<NounDefinition>(StatusCodes.Status200OK)
-    .WithName("Define")
-    .WithOpenApi(
-        operation =>
-            new OpenApiOperation(operation)
-            {
-                Summary = "Defines the word",
-                Tags = new List<OpenApiTag> { new() { Name = "Definitions" } }
-            }
-    );
+app.MapDefinitionEndpoint();
 
 app.MapGet(
         "/api/translation/{phrase}",
-        ([FromRoute] string phrase, TranslationService service) =>
+        ([FromRoute] string phrase, [FromServices] TranslationService service) =>
             service.TranslateAsync(phrase, CancellationToken.None)
     )
     .WithName("Translate")
@@ -76,7 +66,7 @@ app.MapGet(
 
 app.MapGet(
         "/api/pronunciation/{phrase}",
-        async ([FromRoute] string phrase, PronunciationService service) =>
+        async ([FromRoute] string phrase, [FromServices] PronunciationService service) =>
         {
             var bytes = await service.PronounceAsync(phrase, CancellationToken.None);
             return $"{Media.FormatPrefix}{Convert.ToBase64String(bytes)}";
@@ -94,7 +84,7 @@ app.MapGet(
 
 app.MapPost(
         "/api/anki/export",
-        ([FromBody] ExportRequest request, AnkiService service) =>
+        ([FromBody] ExportRequest request, [FromServices] AnkiService service) =>
             service.AddCards(request.Deck, request.Cards, CancellationToken.None)
     )
     .WithName("Export")
@@ -107,7 +97,10 @@ app.MapPost(
             }
     );
 
-app.MapGet("/api/anki/decks", (AnkiConnect client) => client.GetDecks(CancellationToken.None))
+app.MapGet(
+        "/api/anki/decks",
+        ([FromServices] AnkiConnect client) => client.GetDecks(CancellationToken.None)
+    )
     .WithName("GetDecks")
     .WithOpenApi(
         operation =>

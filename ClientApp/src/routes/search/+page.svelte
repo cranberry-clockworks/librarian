@@ -1,19 +1,19 @@
 <script lang="ts">
     import {page} from "$app/stores";
-    import {AnkiService, DefinitionsService} from "$lib/generated/client";
+    import {DefinitionsService} from "$lib/generated/client";
     import Definition from "../../components/definitions/Definition.svelte";
     
-    async function search(word: string | null) {
+    async function search(word: string | null, pos: string | null) {
         if (word === null)
             return [];
         
-        return DefinitionsService.define(word);
+        return DefinitionsService.define(word, pos ?? undefined, 3);
     }
 </script>
 
 
 <p>
-    {#await search($page.url.searchParams.get("q"))}
+    {#await search($page.url.searchParams.get("q"), $page.url.searchParams.get("pos"))}
         Loading...
     {:then definitions}
         <div>

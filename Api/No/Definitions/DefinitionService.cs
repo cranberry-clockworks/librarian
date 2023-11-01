@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Librarian.Api.Models.Definitions;
 
-namespace Librarian.Api.No;
+namespace Librarian.Api.No.Definitions;
 
 public class DefinitionService
 {
@@ -16,6 +16,7 @@ public class DefinitionService
 
     public async Task<ICollection<Definition>> GetDefinitionsAsync(
         string word,
+        string? wordClass,
         int limit = 3,
         CancellationToken token = default
     )
@@ -23,7 +24,7 @@ public class DefinitionService
         var searchResult = await _client.SearchArticlesAsync(
             word,
             Dictionary.Bokmaal,
-            WordClass.Any,
+            TryConvertWordClass(wordClass),
             Scope.ExactLemma | Scope.InflectedForms | Scope.FullTextSearch,
             token
         );
@@ -91,5 +92,30 @@ public class DefinitionService
         }
 
         return result.DistinctBy(static x => $"{x.Type}{x.Word}").ToList();
+    }
+
+    private static WordClass TryConvertWordClass(string? wordClass)
+    {
+        if (string.IsNullOrEmpty(wordClass))
+        {
+            return WordClass.Any;
+        }
+
+        if (wordClass.Equals(Models.WordClass.Noun, StringComparison.OrdinalIgnoreCase))
+        {
+            return WordClass.Noun;
+        }
+
+        if (wordClass.Equals(Models.WordClass.Verb, StringComparison.OrdinalIgnoreCase))
+        {
+            return WordClass.Verb;
+        }
+
+        if (wordClass.Equals(Models.WordClass.Adjective, StringComparison.OrdinalIgnoreCase))
+        {
+            return WordClass.Adjective;
+        }
+
+        throw new ArgumentException("Unknown word class", nameof(wordClass));
     }
 }

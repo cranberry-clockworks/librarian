@@ -1,5 +1,6 @@
 <script>
     import CardList from "../components/cards/CardList.svelte";
+    import SearchForm from "../components/SearchForm.svelte";
 </script>
 
 <div class="row">
@@ -9,9 +10,7 @@
     
     <div class="column right">
         <nav>
-            <form action="/search" method="get">
-                <input name="q" placeholder="Enter a word to search">
-            </form>
+            <SearchForm/>
         </nav>
         <slot/>
     </div>
@@ -19,10 +18,7 @@
 
 
 <style>
-    input {
-        font-size: 2em;
-        width: 100%;
-    }
+    
     
     .row {
         display: flex;

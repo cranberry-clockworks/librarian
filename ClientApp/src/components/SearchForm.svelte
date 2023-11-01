@@ -3,6 +3,8 @@
         <input name="q" placeholder="Enter a word to search">
     </div>
     <div>
+        <input id="Noun" name="pos" type="radio" value="any" checked/>
+        <label for="noun">Any</label>
         <input id="Noun" name="pos" type="radio" value="noun" />
         <label for="noun">Noun</label>
         <input id="verb" name="pos"type="radio" value="verb" />

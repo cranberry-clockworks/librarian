@@ -7,7 +7,8 @@
         if (word === null)
             return [];
         
-        return DefinitionsService.define(word, pos ?? undefined, 3);
+        let partOfSpeech = pos === "any" ? undefined : pos;
+        return DefinitionsService.define(word, partOfSpeech ?? undefined, 3);
     }
 </script>
 

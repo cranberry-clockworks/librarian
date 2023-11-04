@@ -1,26 +1,23 @@
 <script lang="ts">
-    import type {Noun, Phrase, Verb} from "$lib/generated/client";
-    import {WordClass} from "$lib/definition";
+    import type {Definition} from "$lib/generated/client";
+
+    import DefinitionEntry from "./DefinitionEntry.svelte";
     
-    import VerbDefinitionBody from "./VerbDefinitionBody.svelte";
-    import DefinitionHeader from "./DefinitionHeader.svelte";
+    export let definition: Definition
     
-    export let definition: Noun | Verb | Phrase
+    function getPhrase(d: Definition) {
+        return (d.prefix ?? "").length > 0 ? `${d.prefix} ${d.lemma}` : d.lemma;
+    }
     
-    function getPhraseForNoun(definition: Noun) {
-        return `${definition.article} ${definition.lemma}`;
+    function strip(type: string | undefined) {
+        return type?.replaceAll("<", "").replaceAll(">", "") ?? "";
     }
 </script>
 <div>
-    {#if definition.$type === WordClass.Noun}
-        <DefinitionHeader phrase={getPhraseForNoun(definition)} wordClass="Noun"/>
-    {:else if definition.$type === WordClass.Verb}
-        <DefinitionHeader phrase="{definition.lemma}" wordClass="Verb" >
-            <VerbDefinitionBody definition={definition}/>
-        </DefinitionHeader>
-    {:else }
-        <DefinitionHeader phrase="{definition.lemma}" wordClass="{definition.$type}"/>
-    {/if}
+    <DefinitionEntry isSub={false} phrase={getPhrase(definition)} wordClass={definition.wordClass}/>
+    {#each definition.inflections ?? [] as inflection}
+        <DefinitionEntry isSub={true} phrase={inflection.word} wordClass="Verb ({strip(inflection.type)})"/>
+    {/each}
 </div>
 
 <style>

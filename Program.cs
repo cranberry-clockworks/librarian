@@ -1,14 +1,10 @@
-using System.ComponentModel.DataAnnotations;
 using Librarian;
 using Librarian.Api.Anki;
 using Librarian.Api.Models;
-using Librarian.Api.Models.Definitions;
 using Librarian.Api.No;
 using Librarian.Api.No.Definitions;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
-using WordClass = Librarian.Api.Models.WordClass;
 
 var builder = WebApplication.CreateBuilder(args);
 

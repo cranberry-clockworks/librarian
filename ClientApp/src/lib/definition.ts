@@ -1,4 +1,4 @@
 export const WordClass = {
-    Noun: "Noun",
-    Verb: "Verb"
+    noun: "noun",
+    verb: "verb"
 };

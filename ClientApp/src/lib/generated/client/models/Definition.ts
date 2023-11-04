@@ -3,8 +3,12 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { Inflection } from './Inflection';
+
 export type Definition = {
-    $type: string;
-    readonly lemma?: string;
+    wordClass?: string;
+    prefix?: string;
+    lemma?: string;
+    inflections?: Array<Inflection>;
 };
 

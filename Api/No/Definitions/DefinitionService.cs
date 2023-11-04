@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using Librarian.Api.Models.Definitions;
+using Librarian.Api.Models;
 
 namespace Librarian.Api.No.Definitions;
 
@@ -43,10 +43,7 @@ public class DefinitionService
             }
         }
 
-        if (result.Count == 0)
-        {
-            result.Add(new Phrase(word));
-        }
+        result.Add(new Definition("phrase", "", word, Array.Empty<Models.Inflection>()));
 
         return result;
     }
@@ -61,33 +58,68 @@ public class DefinitionService
             return null;
         }
 
-        var wordClass = lemma.InflectionClass;
+        var wordClass = lemma.Paradigms
+            .FirstOrDefault()
+            ?.InflectionGroup.Split('_')
+            .FirstOrDefault()
+            ?.ToLower();
 
         return wordClass switch
         {
-            "m1" => new Noun(lemma.Value, Grammar.Article.Male),
-            "f1" => new Noun(lemma.Value, Grammar.Article.Female),
-            "n1" => new Noun(lemma.Value, Grammar.Article.Neutral),
-            "v1"
-            or "verb"
-                => new Verb(lemma.Value, ToInflectionModel(lemma.Paradigms.First().Inflections)),
-            "a1" => new Adjective(lemma.Value),
-            _ => new Phrase(lemma.Value),
+            "noun"
+                => new Definition(
+                    "noun",
+                    GetArticleForNoun(lemma),
+                    lemma.Value,
+                    Array.Empty<Models.Inflection>()
+                ),
+            "verb"
+                => new Definition(
+                    "verb",
+                    string.Empty,
+                    lemma.Value,
+                    ToInflectionModel(lemma.Paradigms.First().Inflections)
+                ),
+            _
+                => new Definition(
+                    wordClass ?? string.Empty,
+                    string.Empty,
+                    lemma.Value,
+                    Array.Empty<Models.Inflection>()
+                ),
         };
     }
 
-    private static ICollection<Models.Definitions.Inflection> ToInflectionModel(
+    private static string GetArticleForNoun(Lemma lemma)
+    {
+        if (lemma.InflectionClass.Contains('n'))
+        {
+            return Grammar.Article.Neutral;
+        }
+
+        if (lemma.InflectionClass.Contains('f'))
+        {
+            return Grammar.Article.Female;
+        }
+
+        if (lemma.InflectionClass.Contains('m'))
+        {
+            return Grammar.Article.Male;
+        }
+
+        return string.Empty;
+    }
+
+    private static ICollection<Models.Inflection> ToInflectionModel(
         IEnumerable<Inflection> inflections
     )
     {
-        var result = new List<Models.Definitions.Inflection>();
+        var result = new List<Models.Inflection>();
 
         foreach (var inflection in inflections)
         {
             result.AddRange(
-                inflection.Tags.Select(
-                    tag => new Models.Definitions.Inflection(tag, inflection.WordForm)
-                )
+                inflection.Tags.Select(tag => new Models.Inflection(tag, inflection.WordForm))
             );
         }
 

@@ -57,7 +57,6 @@
     {:else}
         <button on:click={fetchTranslation}>Translate</button>
     {/if}
-    <slot/>
 </div>
 
 <style>

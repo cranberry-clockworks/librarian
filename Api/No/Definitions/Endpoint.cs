@@ -1,4 +1,4 @@
-using Librarian.Api.Models.Definitions;
+using Librarian.Api.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
@@ -41,7 +41,7 @@ public static class Endpoint
         var result = await pr.GetDefinitionsAsync(
             word,
             partOfSpeech,
-            count ?? 3,
+            count ?? 10,
             CancellationToken.None
         );
         return Results.Ok(result);

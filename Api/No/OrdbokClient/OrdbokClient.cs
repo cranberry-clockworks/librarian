@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Librarian.Api.No;
+namespace Librarian.Api.No.OrdbokClient;
 
 public class OrdbokClient
 {

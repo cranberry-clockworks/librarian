@@ -36,9 +36,6 @@ export class DefinitionsService {
                 'count': count,
             },
             body: requestBody,
-            errors: {
-                400: `Bad Request`,
-            },
         });
     }
 

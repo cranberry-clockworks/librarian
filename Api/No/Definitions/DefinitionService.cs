@@ -1,14 +1,14 @@
 using System.Diagnostics;
-using Librarian.Api.Models;
+using Librarian.Api.No.OrdbokClient;
 
 namespace Librarian.Api.No.Definitions;
 
 public class DefinitionService
 {
-    private readonly OrdbokClient _client;
+    private readonly OrdbokClient.OrdbokClient _client;
     private readonly ILogger<DefinitionService> _logger;
 
-    public DefinitionService(ILogger<DefinitionService> logger, OrdbokClient client)
+    public DefinitionService(ILogger<DefinitionService> logger, OrdbokClient.OrdbokClient client)
     {
         _logger = logger;
         _client = client;
@@ -43,7 +43,7 @@ public class DefinitionService
             }
         }
 
-        result.Add(new Definition("phrase", "", word, Array.Empty<Models.Inflection>()));
+        result.Add(new Definition("phrase", "", word, Array.Empty<Inflection>()));
 
         return result;
     }
@@ -71,7 +71,7 @@ public class DefinitionService
                     "noun",
                     GetArticleForNoun(lemma),
                     lemma.Value,
-                    Array.Empty<Models.Inflection>()
+                    Array.Empty<Inflection>()
                 ),
             "verb"
                 => new Definition(
@@ -85,7 +85,7 @@ public class DefinitionService
                     wordClass ?? string.Empty,
                     string.Empty,
                     lemma.Value,
-                    Array.Empty<Models.Inflection>()
+                    Array.Empty<Inflection>()
                 ),
         };
     }
@@ -110,16 +110,16 @@ public class DefinitionService
         return string.Empty;
     }
 
-    private static ICollection<Models.Inflection> ToInflectionModel(
-        IEnumerable<Inflection> inflections
+    private static ICollection<Inflection> ToInflectionModel(
+        IEnumerable<OrdbokClient.Inflection> inflections
     )
     {
-        var result = new List<Models.Inflection>();
+        var result = new List<Inflection>();
 
         foreach (var inflection in inflections)
         {
             result.AddRange(
-                inflection.Tags.Select(tag => new Models.Inflection(tag, inflection.WordForm))
+                inflection.Tags.Select(tag => new Inflection(tag, inflection.WordForm))
             );
         }
 

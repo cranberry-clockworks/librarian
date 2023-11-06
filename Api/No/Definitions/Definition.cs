@@ -1,6 +1,4 @@
-using Librarian.Api.No;
-
-namespace Librarian.Api.Models;
+namespace Librarian.Api.No.Definitions;
 
 public class Definition
 {

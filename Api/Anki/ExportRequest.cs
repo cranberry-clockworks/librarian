@@ -1,4 +1,4 @@
-namespace Librarian.Api.Models;
+namespace Librarian.Api.Anki;
 
 public class ExportRequest
 {

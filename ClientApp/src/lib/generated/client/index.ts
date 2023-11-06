@@ -10,7 +10,6 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 export type { Card } from './models/Card';
 export type { Definition } from './models/Definition';
 export type { ExportRequest } from './models/ExportRequest';
-export type { HttpValidationProblemDetails } from './models/HttpValidationProblemDetails';
 export type { Inflection } from './models/Inflection';
 
 export { AnkiService } from './services/AnkiService';

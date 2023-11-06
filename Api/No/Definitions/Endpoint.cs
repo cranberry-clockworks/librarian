@@ -1,5 +1,3 @@
-using Librarian.Api.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 
@@ -7,19 +5,18 @@ namespace Librarian.Api.No.Definitions;
 
 public static class Endpoint
 {
-    public static void AddDefinitionService(this IServiceCollection services)
+    public static void AddDefinitionServices(this IServiceCollection services)
     {
-        // services.AddHttpClient();
+        services.AddHttpClient();
 
-        services.AddTransient<OrdbokClient>();
+        services.AddTransient<OrdbokClient.OrdbokClient>();
         services.AddTransient<DefinitionService>();
     }
 
-    public static void MapDefinitionEndpoint(this WebApplication app)
+    public static void MapDefinitionEndpoints(this WebApplication app)
     {
         app.MapGet("/api/definition/{word}", Handle)
             .Produces<ICollection<Definition>>()
-            .ProducesValidationProblem()
             .WithName("Define")
             .WithOpenApi(
                 operation =>
@@ -35,10 +32,10 @@ public static class Endpoint
         [FromRoute] string word,
         [FromQuery] string? partOfSpeech,
         [FromQuery] int? count,
-        [FromServices] DefinitionService pr
+        [FromServices] DefinitionService service
     )
     {
-        var result = await pr.GetDefinitionsAsync(
+        var result = await service.GetDefinitionsAsync(
             word,
             partOfSpeech,
             count ?? 10,

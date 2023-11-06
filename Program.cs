@@ -1,6 +1,5 @@
 using Librarian;
 using Librarian.Api.Anki;
-using Librarian.Api.Models;
 using Librarian.Api.No;
 using Librarian.Api.No.Definitions;
 using Microsoft.AspNetCore.Mvc;
@@ -18,12 +17,11 @@ builder.Services.Configure<PronunciationServiceConfiguration>(
 
 builder.Services.AddHttpClient();
 
-builder.Services.AddDefinitionService();
+builder.Services.AddDefinitionServices();
 builder.Services.AddTransient<TranslationService>();
 builder.Services.AddTransient<PronunciationService>();
 
-builder.Services.AddTransient<AnkiConnect>();
-builder.Services.AddTransient<AnkiService>();
+builder.Services.AddAnkiServices();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o =>
@@ -44,7 +42,7 @@ app.UseSwagger();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-app.MapDefinitionEndpoint();
+app.MapDefinitionEndpoints();
 
 app.MapGet(
         "/api/translation/{phrase}",
@@ -79,33 +77,6 @@ app.MapGet(
             }
     );
 
-app.MapPost(
-        "/api/anki/export",
-        ([FromBody] ExportRequest request, [FromServices] AnkiService service) =>
-            service.AddCards(request.Deck, request.Cards, CancellationToken.None)
-    )
-    .WithName("Export")
-    .WithOpenApi(
-        operation =>
-            new OpenApiOperation(operation)
-            {
-                Summary = "Export cards",
-                Tags = new List<OpenApiTag> { new() { Name = "Anki" } }
-            }
-    );
-
-app.MapGet(
-        "/api/anki/decks",
-        ([FromServices] AnkiConnect client) => client.GetDecks(CancellationToken.None)
-    )
-    .WithName("GetDecks")
-    .WithOpenApi(
-        operation =>
-            new OpenApiOperation(operation)
-            {
-                Summary = "Get available decks",
-                Tags = new List<OpenApiTag> { new() { Name = "Anki" } }
-            }
-    );
+app.MapAnkiEndpoints();
 
 app.Run();

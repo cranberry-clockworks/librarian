@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
@@ -86,12 +85,10 @@ public class AnkiConnect
         }
         catch (ApiException e)
         {
-            if (e.Response.Contains("duplicate"))
-            {
-                return;
-            }
+            if (!e.Response.Contains("duplicate"))
+                throw;
 
-            throw;
+            _logger.LogInformation("The note is duplicated");
         }
     }
 

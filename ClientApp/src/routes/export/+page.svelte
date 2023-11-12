@@ -6,7 +6,7 @@
     
     async function send() {
         await AnkiService.export({deck: selectedDeck, cards: $cards});
-        cards.update(c => []);
+        alert("Finished");
     }
 </script>
 

@@ -7,11 +7,18 @@
         console.debug(`Removing cards with title: ${title}`);
         cards.update(c => c.filter(x => x.title !== title));
     }
+    
+    function onRemoveAllButtonClicked() {
+        cards.update(c => [])    
+    }
 </script>
 
 <div class="main">
     <div style="margin-bottom: 10px">
         <a href="/export">Export</a>
+    </div>
+    <div>
+        <button on:click={onRemoveAllButtonClicked}>Remove all</button>
     </div>
     {#each $cards as card}
             <CardListEntry card="{card}" on:removeButtonClicked={onRemoveButtonClicked}/>

@@ -9,7 +9,7 @@
     export let phrase = "en Lemma";
     export let wordClass = "Unknown";
     
-    let translation = ""
+    let translation : undefined | string
     let audio = ""
     
     let frontDefault = "";
@@ -29,7 +29,7 @@
     }
     
     async function AddCard() {
-        if (translation.length === 0) {
+        if (typeof translation === "undefined") {
             await fetchTranslation();
         }
         
@@ -37,7 +37,7 @@
         const mainAudio = getNameForMedia(phrase);
         media[mainAudio] = await fetchAudio();
         
-        const card = createCard(wordClass, phrase, translation, media, "");
+        const card = createCard(wordClass, phrase, translation!, media, "");
         
         if ($cards.find(c => c.title === card.title)) {
             return;
@@ -52,8 +52,8 @@
 <div>
     <button on:click={AddCard}>Add</button>
     <PronunciationButton fetch="{fetchAudio}"/>
-    {#if translation.length > 0}
-        <span>{translation}</span>
+    {#if typeof translation != "undefined"}
+        <span><input type="text" bind:value={translation}></span>
     {:else}
         <button on:click={fetchTranslation}>Translate</button>
     {/if}
@@ -74,5 +74,15 @@
 
     .wordClass.sub {
         font-size: 0.8em;
+    }
+    input[type="text"] {
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        outline: none;
+        font-size: inherit;
+        font-family: inherit;
+        color: inherit;
     }
 </style>

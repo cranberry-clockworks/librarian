@@ -1,82 +1,32 @@
 using Librarian;
-using Librarian.Api.Anki;
-using Librarian.Api.No;
-using Librarian.Api.No.Definitions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Models;
+using Librarian.Cards.Anki;
+using Librarian.No.Dictionaries;
+using Librarian.No.Pronunciations;
+using Librarian.No.Translations;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateSlimBuilder(args);
 
-builder.Services.Configure<TranslationServiceConfiguration>(
-    builder.Configuration.GetSection(TranslationServiceConfiguration.SectionName)
-);
-
-builder.Services.Configure<PronunciationServiceConfiguration>(
-    builder.Configuration.GetSection(PronunciationServiceConfiguration.Section)
-);
-
-builder.Services.AddHttpClient();
-
-builder.Services.AddDefinitionServices();
-builder.Services.AddTransient<TranslationService>();
-builder.Services.AddTransient<PronunciationService>();
-
-builder.Services.AddAnkiServices();
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(o =>
+builder.Services.AddControllersWithViews();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(option =>
 {
-    o.SwaggerDoc("v1", new OpenApiInfo { Title = "Server-side API", Version = "v1" });
-    o.SupportNonNullableReferenceTypes();
-    o.UseOneOfForPolymorphism();
-    o.EnableAnnotations(
-        enableAnnotationsForPolymorphism: true,
-        enableAnnotationsForInheritance: true
-    );
+    option.IdleTimeout = TimeSpan.FromDays(1);
+    option.Cookie.HttpOnly = true;
+    option.Cookie.IsEssential = true;
 });
+
+builder.Services.AddScoped<IRazorRenderer, RazorRenderer>();
+
+builder.AddNorwegianDictionary();
+builder.AddNorwegianPronunciation();
+builder.AddNorwegianTranslation();
+builder.AddAnki();
 
 var app = builder.Build();
 
-app.UseSwagger();
-
-app.UseDefaultFiles();
+app.UseRouting();
+app.UseSession();
 app.UseStaticFiles();
-
-app.MapDefinitionEndpoints();
-
-app.MapGet(
-        "/api/translation/{phrase}",
-        ([FromRoute] string phrase, [FromServices] TranslationService service) =>
-            service.TranslateAsync(phrase, CancellationToken.None)
-    )
-    .WithName("Translate")
-    .WithOpenApi(
-        operation =>
-            new OpenApiOperation(operation)
-            {
-                Summary = "Translates the phrase",
-                Tags = new List<OpenApiTag> { new() { Name = "Translations" } }
-            }
-    );
-
-app.MapGet(
-        "/api/pronunciation/{phrase}",
-        async ([FromRoute] string phrase, [FromServices] PronunciationService service) =>
-        {
-            var bytes = await service.PronounceAsync(phrase, CancellationToken.None);
-            return $"{Media.FormatPrefix}{Convert.ToBase64String(bytes)}";
-        }
-    )
-    .WithName("Pronounce")
-    .WithOpenApi(
-        operation =>
-            new OpenApiOperation(operation)
-            {
-                Summary = "Pronounces the phrase",
-                Tags = new List<OpenApiTag> { new() { Name = "Pronunciations" } }
-            }
-    );
-
-app.MapAnkiEndpoints();
+app.MapControllers();
 
 app.Run();

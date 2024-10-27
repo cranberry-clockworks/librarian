@@ -1,0 +1,15 @@
+#search-bar {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+ 
+#search-bar input {
+    font-size: 2em;
+    flex: 1;
+}
+
+.pos {
+    display: inline-block;
+    vertical-align:middle;
+}

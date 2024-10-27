@@ -1,0 +1,24 @@
+@using Librarian.Cards
+<div id="cards">
+    <div>
+        <a id="export-button" href="/export">Export</a>
+    </div>
+    <div>
+        <button
+            hx-delete="/cards" 
+            hx-target="#cards-container"
+            hx-swap="innerHTML"
+        >
+            Remove All
+        </button>
+    </div>
+    <div id="cards-container">
+        @{
+            IReadOnlyDictionary<int, Card> cards = ViewBag.Cards ?? new Dictionary<int, Card>();
+            @foreach(var card in cards)
+            {
+                @await Html.PartialAsync("_Card", card)
+            }
+        }
+    </div>
+</div>

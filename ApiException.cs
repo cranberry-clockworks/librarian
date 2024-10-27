@@ -3,26 +3,19 @@ using System.Net.Http.Headers;
 
 namespace Librarian;
 
-public class ApiException : Exception
-{
-    public ApiException(
-        string message,
-        HttpStatusCode statusCode,
-        string response,
-        HttpHeaders headers
+public class ApiException(
+    string message,
+    HttpStatusCode statusCode,
+    string response,
+    HttpHeaders headers
+)
+    : Exception(
+        $"{message}\n\nStatus: {statusCode}\nResponse:\n{response[..(response.Length >= 512 ? 512 : response.Length)]}"
     )
-        : base(
-            $"{message}\n\nStatus: {statusCode}\nResponse:\n{response[..(response.Length >= 512 ? 512 : response.Length)]}"
-        )
-    {
-        StatusCode = statusCode;
-        Response = response;
-        Headers = headers;
-    }
+{
+    public HttpStatusCode StatusCode { get; private set; } = statusCode;
 
-    public HttpStatusCode StatusCode { get; private set; }
+    public string Response { get; private set; } = response;
 
-    public string Response { get; private set; }
-
-    public HttpHeaders Headers { get; }
+    public HttpHeaders Headers { get; } = headers;
 }

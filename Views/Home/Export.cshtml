@@ -1,0 +1,30 @@
+@model IReadOnlyList<string>
+
+@{
+    Layout = "_Layout";
+    
+    <h1>Export</h1>
+    
+    if (Model.Count > 0)
+    {
+        <form hx-post="/anki">
+            @for(var i = 0; i < Model.Count; ++i)
+            {
+                var deck = Model[i];
+                
+                <div id="deck-container">
+                    <label class="deck">
+                        <input class="radio" type="radio" name="deck" value="@deck" @(i == 0 ? "checked": "")>@deck
+                    </label>
+                </div>
+            }
+            <input type="submit" value="Export"/>
+        </form>
+    }
+    else
+    {
+        <div>
+            <p>No decks were found. Check if Anki is running on your machine.</p>
+        </div>
+    }
+}

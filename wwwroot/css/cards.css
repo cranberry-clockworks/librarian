@@ -1,0 +1,27 @@
+#cards {
+    border: thin solid black;
+    border-radius: 5px;
+    padding: 0 10px 10px 10px;
+}
+
+#export-button {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    font-size: 2em;
+    font-weight: bold;
+    color: inherit; 
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.reveal-on-hover:hover .hidden {
+    visibility: visible;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}

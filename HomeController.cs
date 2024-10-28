@@ -22,6 +22,8 @@ public class HomeController(
         return View("Index");
     }
 
+    private const int PageSize = 3;
+    
     [HttpGet("search")]
     public async Task<IActionResult> Search(
         [FromQuery] string phrase,
@@ -29,10 +31,31 @@ public class HomeController(
         CancellationToken token
     )
     {
-        var definitions = await service.GetDefinitionsAsync(phrase, pos, token);
+        var articles = (await service.GetArticlesAsync(phrase, pos, token)).Take(PageSize);
+        var definitions = await service.GetDefinitionsAsync(articles, token);
         ViewBag.Cards = HttpContext.Session.GetCards();
         ViewBag.Search = phrase;
+        ViewBag.Phrase = phrase;
+        ViewBag.PartOfSpeech = pos.ToString();
+        ViewBag.NextPage = 1;
         return View("Search", definitions);
+    }
+    
+    [HttpGet("search/more")]
+    public async Task<IActionResult> Search(
+        [FromQuery] string phrase,
+        [FromQuery] PartOfSpeech pos,
+        [FromQuery] int page,
+        CancellationToken token
+    )
+    {
+        var articles = (await service.GetArticlesAsync(phrase, pos, token)).Skip(page * PageSize).Take(PageSize);
+        var definitions = await service.GetDefinitionsAsync(articles, token);
+        ViewBag.Cards = HttpContext.Session.GetCards();
+        ViewBag.Phrase = phrase;
+        ViewBag.PartOfSpeech = pos.ToString();
+        ViewBag.NextPage = page + 1;
+        return PartialView("_SearchPage", definitions);
     }
 
     [HttpGet("export")]

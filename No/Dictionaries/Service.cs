@@ -4,11 +4,7 @@ namespace Librarian.No.Dictionaries;
 
 public class Service(ILogger<Service> logger, IOrdbokClient client) : IService
 {
-    public async Task<IReadOnlyCollection<Definition>> GetDefinitionsAsync(
-        string phrase,
-        PartOfSpeech partOfSpeech,
-        CancellationToken token
-    )
+    public async Task<IReadOnlyCollection<int>> GetArticlesAsync(string phrase, PartOfSpeech partOfSpeech, CancellationToken token)
     {
         var searchResult = await client.SearchArticlesAsync(
             phrase,
@@ -18,9 +14,16 @@ public class Service(ILogger<Service> logger, IOrdbokClient client) : IService
             token
         );
 
+        return searchResult.Bookmaal;
+    }
+    public async Task<IReadOnlyCollection<Definition>> GetDefinitionsAsync(
+        IEnumerable<int> articleIds,
+        CancellationToken token
+    )
+    {
         var result = new List<Definition>();
 
-        foreach (var articleId in searchResult.Bookmaal.Take(3))
+        foreach (var articleId in articleIds)
         {
             var article = await client.GetArticleAsync(Dictionary.Bokmaal, articleId, token);
             var definition = TryConvertToDefinition(article);

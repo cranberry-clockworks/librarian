@@ -1,0 +1,62 @@
+@using Librarian
+@model IReadOnlyCollection<Librarian.No.Dictionaries.Definition>
+
+@foreach (var definition in Model)
+{
+    <div class="definition">
+        @foreach (var inflection in definition.Inflections)
+        {
+            <form hx-post="/cards"
+                  hx-target="#cards-container"
+                  hx-swap="beforeend"
+                  class="inflection"
+            >
+                <div class="title">
+                    <input
+                        name="phrase"
+                        type="text"
+                        readonly
+                        value="@inflection.Phrase"
+                    >
+                    <input
+                        name="part-of-speech"
+                        type="text"
+                        readonly
+                        value="@definition.PartOfSpeech">
+                    <input
+                        name="tags"
+                        type="text"
+                        readonly
+                        value="@(string.Join(", ", inflection.Tags))"
+                    >
+                </div>
+                <div>
+                    <input type="submit" class="add-button" value="Add"/>
+                        
+                    <button onclick="this.querySelector('audio').play()"
+                            type="button">
+                        Pronounce
+                        <audio preload="none">
+                            <source src="@($"/no/pronunciations/{Uri.EscapeDataString(inflection.Phrase)}")"
+                                    type="audio/mpeg">
+                        </audio>
+                    </button>
+                        
+                    <button
+                        hx-get="@($"/no/translations/{Uri.EscapeDataString(inflection.Phrase)}")"
+                        hx-target="this"
+                        hx-swap="outerHTML"
+                        type="button"
+                    >
+                        Translate
+                    </button>
+                </div>
+            </form>
+        }
+    </div>
+}
+<div hx-get="/search/more?phrase=@(Uri.EscapeDataString(ViewBag.Phrase))&pos=@(Uri.EscapeDataString(ViewBag.PartOfSpeech))&page=@ViewBag.NextPage"
+     hx-trigger="revealed"
+     hx-target="this"
+     hx-swap="outerHTML">
+</div>

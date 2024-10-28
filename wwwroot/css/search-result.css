@@ -1,31 +1,48 @@
-.definition {
+#search-results .definition {
     border: thin solid cornflowerblue;
     padding: 10px 20px;
     border-radius: 5px;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
-.definition .part-of-speech {
+#search-results .inflection {
+    margin-bottom: 10px;
+}
+
+#search-results .title {
+    display: flex;
+    flex-direction: row;
+}
+
+#search-results input[type="text"] {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+#search-results input[name="phrase"] {
+    width: 50%;
+    font-size: 1.5em;
+    font-family: serif;
+}
+
+#search-results input[name="part-of-speech"] {
+    width: 10%;
     text-transform: uppercase;
+    font-weight: bold;
 }
 
-/*.definition .phrase {*/
-/*    font-size: 2em;*/
-/*    margin-right: 10px;*/
-/*}*/
+#search-results input[name="tags"] {
+    width: 40%;
+}
 
-/*.definition .tags {*/
-/*    font-size: 0.8em; */
-/*}*/
+#search-results input[name="translation"] {
+    flex: 1
+}
 
-/*.definition input[type="text"] {*/
-/*    border: none;*/
-/*    background: transparent;*/
-/*    outline: none;*/
-/*    color: inherit;*/
-/*    padding: 0;*/
-/*    margin: 0;*/
-/*    width: fit-content;*/
-/*    display: inline-block;*/
-/*    max-width: max-content;*/
-/*}*/
+#search-results form > div {
+    display: flex;
+    gap: 10px;
+}

@@ -1,15 +1,12 @@
 @model KeyValuePair<int, Librarian.Cards.Card>
 
-@{
-    var uri = $"cards/{Model.Key}";
-    <div class="reveal-on-hover">
-        <span>@Model.Value.Phrase (@Model.Value.PartOfSpeech)</span>
-        <button
-            class="hidden"
-            hx-delete="@uri"
-            hx-target="closest div"
-            hx-swap="outerHTML">
-            Remove
-        </button>
-    </div>
-}
+<div class="reveal-on-hover">
+    <span>@Model.Value.Phrase (@Model.Value.PartOfSpeech)</span>
+    <button
+        class="hidden"
+        hx-delete=@($"cards/{Uri.EscapeDataString(Model.Key.ToString())}");
+        hx-target="closest div"
+        hx-swap="outerHTML">
+        Remove
+    </button>
+</div>

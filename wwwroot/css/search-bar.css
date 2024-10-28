@@ -9,7 +9,7 @@
     flex: 1;
 }
 
-.pos {
+#search-bar .pos {
     display: inline-block;
     vertical-align:middle;
 }

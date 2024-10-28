@@ -4,7 +4,7 @@
     padding: 0 10px 10px 10px;
 }
 
-#export-button {
+#cards #export-button {
     display: block;
     text-align: center;
     text-decoration: none;
@@ -13,15 +13,15 @@
     color: inherit; 
 }
 
-.hidden {
+#cards. .hidden {
     visibility: hidden;
 }
 
-.reveal-on-hover:hover .hidden {
+#cards .reveal-on-hover:hover .hidden {
     visibility: visible;
 }
 
-a {
+#cards .a {
     text-decoration: none;
     color: inherit;
 }

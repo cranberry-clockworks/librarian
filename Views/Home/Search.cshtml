@@ -12,8 +12,9 @@
                 <form hx-post="/cards"
                       hx-target="#cards-container"
                       hx-swap="beforeend"
+                      class="inflection"
                 >
-                    <div style="display: flex">
+                    <div class="title">
                         <input
                             name="phrase"
                             type="text"
@@ -33,15 +34,22 @@
                         >
                     </div>
                     <div>
-                        <input type="submit" class="add-button" value="Add">
-                        <audio preload="none" controls>
-                            <source src="@($"/no/pronunciations/{Uri.EscapeDataString(inflection.Phrase)}")"
-                                    type="audio/mpeg">
-                        </audio>
+                        <input type="submit" class="add-button" value="Add"/>
+                        
+                        <button onclick="this.querySelector('audio').play()"
+                                type="button">
+                            Pronounce
+                            <audio preload="none">
+                                <source src="@($"/no/pronunciations/{Uri.EscapeDataString(inflection.Phrase)}")"
+                                        type="audio/mpeg">
+                            </audio>
+                        </button>
+                        
                         <button
                             hx-get="@($"/no/translations/{Uri.EscapeDataString(inflection.Phrase)}")"
                             hx-target="this"
                             hx-swap="outerHTML"
+                            type="button"
                         >
                             Translate
                         </button>

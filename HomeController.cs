@@ -72,6 +72,7 @@ public class HomeController(
             decks = [];
         }
 
+        ViewBag.Cards = HttpContext.Session.GetCards();
         return View("Export", decks);
     }
 }

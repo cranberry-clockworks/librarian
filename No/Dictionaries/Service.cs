@@ -57,7 +57,7 @@ public class Service(ILogger<Service> logger, IOrdbokClient client) : IService
             return null;
         }
 
-        var latestEntry = lemma.Paradigms.OrderByDescending(static x => x.From).FirstOrDefault();
+        var latestEntry = lemma.Paradigms.FirstOrDefault();
         if (latestEntry == null)
         {
             logger.LogWarning("No paradigm found");

@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Librarian.Cards;
 
-[ApiController]
 [Route("cards")]
 public class Controller : Microsoft.AspNetCore.Mvc.Controller
 {
@@ -30,6 +29,11 @@ public class Controller : Microsoft.AspNetCore.Mvc.Controller
     [HttpPost]
     public IActionResult Add([FromForm] Card card)
     {
+        if (!ModelState.IsValid)
+        {
+            return ValidationProblem(ModelState);
+        }
+        
         var cards = HttpContext.Session.GetCards();
 
         if (!cards.TryAdd(card.Id, card))

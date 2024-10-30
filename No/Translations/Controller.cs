@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Librarian.No.Translations;
 
-[ApiController]
 [Route("/no/translations")]
 public class Controller(IService service) : Microsoft.AspNetCore.Mvc.Controller
 {

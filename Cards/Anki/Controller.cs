@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Librarian.Cards.Anki;
 
-[ApiController]
 [Route("anki")]
 public class Controller(IAnkiService service, ITemplateRenderer renderer)
     : Microsoft.AspNetCore.Mvc.Controller
@@ -12,6 +11,6 @@ public class Controller(IAnkiService service, ITemplateRenderer renderer)
     {
         var cards = await renderer.RenderAsync(HttpContext.Session.GetCards().Values, token);
         await service.AddCards(deck, cards, token);
-        return Redirect("/");
+        return PartialView("_Exported");
     }
 }

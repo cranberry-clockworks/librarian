@@ -3,20 +3,19 @@
 @foreach (var definition in Model)
 {
     <div class="definition">
+        <div class="small">@definition.Entry</div>
         @foreach (var inflection in definition.Inflections)
         {
             <form hx-post="/cards"
                   hx-target="#cards-container"
                   hx-swap="beforeend"
-                  class="inflection"
-            >
+                  class="inflection">
                 <div class="title">
                     <input
                         name="phrase"
                         type="text"
                         readonly
-                        value="@inflection.Phrase"
-                    >
+                        value="@inflection.Phrase">
                     <input
                         name="part-of-speech"
                         type="text"
@@ -26,12 +25,11 @@
                         name="tags"
                         type="text"
                         readonly
-                        value="@(string.Join(", ", inflection.Tags))"
-                    >
+                        value="@(string.Join(", ", inflection.Tags))">
                 </div>
                 <div>
                     <input type="submit" class="add-button" value="Add"/>
-                        
+
                     <button onclick="this.querySelector('audio').play()"
                             type="button">
                         Pronounce
@@ -40,13 +38,12 @@
                                     type="audio/mpeg">
                         </audio>
                     </button>
-                        
+
                     <button
                         hx-get="@($"/no/translations/{Uri.EscapeDataString(inflection.Phrase)}")"
                         hx-target="this"
                         hx-swap="outerHTML"
-                        type="button"
-                    >
+                        type="button">
                         Translate
                     </button>
                 </div>

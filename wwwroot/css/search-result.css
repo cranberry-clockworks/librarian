@@ -6,6 +6,10 @@
     margin-top: 10px;
 }
 
+#searchResults .small {
+    font-size: 0.1em;
+}
+
 #search-results .inflection {
     margin-bottom: 10px;
 }

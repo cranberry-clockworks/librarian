@@ -26,11 +26,8 @@ public class Service(ILogger<Service> logger, IOrdbokClient client) : IService
         foreach (var articleId in articleIds)
         {
             var article = await client.GetArticleAsync(Dictionary.Bokmaal, articleId, token);
-            var definition = TryConvertToDefinition(article);
-            if (definition != null)
-            {
-                result.Add(definition);
-            }
+            var definition = TryConvertToDefinitions(article);
+            result.AddRange(definition);
         }
 
         return result;
@@ -48,31 +45,31 @@ public class Service(ILogger<Service> logger, IOrdbokClient client) : IService
         };
     }
 
-    private Definition? TryConvertToDefinition(Article article)
+    private List<Definition> TryConvertToDefinitions(Article article)
     {
         var lemma = article.Lemmas.FirstOrDefault();
         if (lemma == null)
         {
             logger.LogWarning("No lemma in the article found");
-            return null;
+            return [];
         }
 
-        var latestEntry = lemma.Paradigms.FirstOrDefault();
-        if (latestEntry == null)
+        var definitions = new List<Definition>();
+
+        foreach (var entry in lemma.Paradigms)
         {
-            logger.LogWarning("No paradigm found");
-            return null;
+            var pos = ExtractDefinitionPartOfSpeech(entry);
+            var inflections = pos switch
+            {
+                "noun" => CreateInflectionsForNoun(lemma),
+                "verb" => CreateInflectionsForVerb(entry),
+                _ => CreateInflectionsDefault(entry),
+            };
+            var definition = new Definition { Entry = entry.From, PartOfSpeech = pos, Inflections = inflections };
+            definitions.Add(definition);
         }
 
-        var pos = ExtractDefinitionPartOfSpeech(latestEntry);
-        var inflections = pos switch
-        {
-            "noun" => CreateInflectionsForNoun(lemma),
-            "verb" => CreateInflectionsForVerb(latestEntry),
-            _ => CreateInflectionsDefault(latestEntry),
-        };
-
-        return new Definition { PartOfSpeech = pos, Inflections = inflections };
+        return definitions;
     }
 
     private static string ExtractDefinitionPartOfSpeech(ParadigmInfo paradigm)

@@ -25,6 +25,13 @@
                 <p>
                     <b>@Model.Phrase</b>
                 </p>
+                <div class="control">
+                    <input class="input has-text-centered"
+                           type="text"
+                           name="example-no"
+                           placeholder="Usage example in Norwegian"
+                           value="@Model.NorwegianUsageExample"/>
+                </div>
             </div>
         </div>
     </div>
@@ -34,18 +41,30 @@
         </div>
         <div class="card-content">
             <div class="content has-text-centered">
-                <p>
-                    <i>@Model.PartOfSpeech</i>
-                    @if (@Model.Tags.Length > 0)
-                    {
-                        @($"{string.Join(", ", @Model.Tags)}")
-                    }
-                </p>
-                <div class="control">
-                    <input class="input has-text-centered"
-                           type="text"
-                           name="translation"
-                           value="@Model.Translation"/>
+                    <p>
+                        <i>@Model.PartOfSpeech</i>
+                        @if (@Model.Tags.Length > 0)
+                        {
+                            @($"{string.Join(", ", @Model.Tags)}")
+                        }
+                    </p>
+                <div class="field">
+                    <div class="control">
+                        <input class="input has-text-centered"
+                               type="text"
+                               name="translation"
+                               placeholder="Translation"
+                               value="@Model.Translation"/>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <input class="input has-text-centered"
+                               type="text"
+                               name="example-en"
+                               placeholder="Usage example translation"
+                               value="@Model.EnglishUsageExample"/>
+                    </div>
                 </div>
             </div>
         </div>

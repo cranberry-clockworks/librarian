@@ -4,6 +4,11 @@
 <i>@ViewBag.PartOfSpeech @if (tags.Any()) { @($"({string.Join(", ", tags)})") }</i><br/>
 <br/>
 <b>@ViewBag.Phrase</b>
+@if (!string.IsNullOrEmpty(ViewBag.ExampleNorwegian))
+{
+<br/><br/>
+<i>@ViewBag.ExampleNorwegian</i>
+}
 <br/>
 [sound:@ViewBag.AudioName]
 <br/>

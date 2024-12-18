@@ -65,6 +65,7 @@ public class TemplateRenderer(
                 { "PartOfSpeech", card.PartOfSpeech },
                 { "Tags", card.Tags },
                 { "AudioName", audioName },
+                { "ExampleNorwegian", card.NorwegianUsageExample }
             }
         );
     }
@@ -82,6 +83,7 @@ public class TemplateRenderer(
                 { "PartOfSpeech", card.PartOfSpeech },
                 { "Tags", card.Tags },
                 { "Translation", await translationTask },
+                { "ExampleEnglish", card.EnglishUsageExample }
             }
         );
     }

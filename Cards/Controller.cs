@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using System.Net.Mime;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Librarian.Cards;
@@ -88,17 +90,57 @@ public class Controller : Microsoft.AspNetCore.Mvc.Controller
             return NotFound("Card is already exists.");
         }
 
-        card = new Card
+        card = card with 
         {
-            PartOfSpeech = card.PartOfSpeech,
-            Phrase = card.Phrase,
             Translation = translation,
-            Tags = card.Tags
         };
 
         cards[card.Id] = card;
         
         HttpContext.Session.SetCards(cards);
         return PartialView("_Notification", "Card was successfully updated.");
+    }
+
+    [HttpPost("refinements")]
+    public IActionResult Refinement([FromForm(Name = "prompt-response")] string response)
+    {
+        if (!ModelState.IsValid)
+        {
+            return ValidationProblem(ModelState);
+        }
+
+        IReadOnlyCollection<RefinementResponse> refinements;
+        try
+        {
+            refinements = JsonSerializer.Deserialize<IReadOnlyCollection<RefinementResponse>>(response)!;
+        }
+        catch (Exception e) when( e is JsonException or NullReferenceException)
+        {
+            return BadRequest("Failed to process refinement response.");
+        }
+
+        var cards = HttpContext.Session.GetCards();
+        foreach (var refinement in refinements)
+        {
+            if (!cards.TryGetValue(refinement.Id, out var card))
+            {
+                return BadRequest($"Card is not found with the given id: {refinement.Id}");
+            }
+
+            var newCard = card with
+            {
+                Translation = refinement.PhraseEnglish,
+                NorwegianUsageExample = refinement.ExampleNorwegian,
+                EnglishUsageExample = refinement.ExampleEnglish
+            };
+            
+            Debug.Assert(card.Id == newCard.Id);
+            
+            cards[card.Id] = newCard;
+        }
+        
+        HttpContext.Session.SetCards(cards);
+
+        return PartialView("_Notification", "Cards were successfully updated.");
     }
 }

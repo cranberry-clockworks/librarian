@@ -6,7 +6,7 @@ namespace Librarian.Cards;
 /// <summary>
 /// Card model used for the form to add.
 /// </summary>
-public class Card
+public record Card
 {
     /// <summary>
     /// A word or set of words.
@@ -31,6 +31,9 @@ public class Card
     /// </summary>
     [FromForm(Name = "translation")]
     public string? Translation { get; init; }
+    
+    public string? NorwegianUsageExample { get; init; }
+    public string? EnglishUsageExample { get; init; }
 
     /// <summary>
     /// The ID that represent the card uniquely.

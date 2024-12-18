@@ -93,11 +93,8 @@ public class HomeController(
 
         if (card.Translation == null)
         {
-            card = new Card
+            card = card with
             {
-                Phrase = card.Phrase,
-                Tags = card.Tags,
-                PartOfSpeech = card.PartOfSpeech,
                 Translation = await translationService.TranslateAsync(card.Phrase, token)
             };
 
@@ -108,5 +105,13 @@ public class HomeController(
 
         ViewBag.Cards = cards;
         return View("Edit", card);
+    }
+
+    [HttpGet("refine")]
+    public IActionResult Refine()
+    {
+        var cards = HttpContext.Session.GetCards();
+        ViewBag.Cards = cards;
+        return View("Refine", cards.Values);
     }
 }

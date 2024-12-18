@@ -4,4 +4,9 @@
 <i>@ViewBag.PartOfSpeech @if (tags.Any()) { @($"({string.Join(", ", tags)})") }</i><br/>
 <br/>
 <b>@ViewBag.Translation</b>
+@if (!string.IsNullOrEmpty(ViewBag.ExampleEnglish))
+{
+    <br/><br/>
+    <i>@ViewBag.ExampleEnglish</i>
+}
 

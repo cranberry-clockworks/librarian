@@ -1,0 +1,82 @@
+@model IEnumerable<Librarian.Cards.Card>
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="block" id="message"></div>
+<form class="box"
+      hx-post="/cards/refinements"
+      hx-target="#message"
+      hx-swap="innerHTML">
+    <h1 class="title">Refine with ChatGPT</h1>
+    <div class="field">
+        <p>Use the prompt below to improve the translation and find examples of how the words are used.</p>
+        <p>Copy the answer and paste it into the text field.</p>
+        <label>Prompt</label>
+        <div class="control">
+<textarea class="textarea" 
+          id="prompt"
+          rows="30"
+          readonly
+          style="font-family: monospace"
+>Hi ChatGPT, I’ll provide a list of Norwegian words with their part of speech in brackets.
+Some of the words may contain one or multiple inflections in parentheses; use only one, preferably the most common one.
+For each word, write the translation and create a sentence using the word in Norwegian, then translate this sentence into English.
+The Norwegian language here refers to Norwegian Bokmål, and the English translation should be in British English.
+Output the result in the following format:
+```json
+[
+    {
+        "id": <word ID as int>,
+        "no": <word or phrase in Norwegian>,
+        "en": <word or phrase in English>,
+        "example-no": <Usage sentence in Norwegian>,
+        "example-en": <Translated usage sentence in English>
+    }
+]
+```
+Example of input:
+-123 å gå [Verb](Inf), 2456 får [Verb](Pres)
+Example of output:
+[
+    {
+        "id": -123,
+        "no": "å gå",
+        "en": "to go",
+        "example-no": "Jeg vil å gå hjem",
+        "example-en": "I want to go home"
+    },
+    {
+        "id": 2456,
+        "no": "får",
+        "en": "gets",
+        "example-no": "Jeg får nok penger",
+        "example-en": "I get enough money"
+    }
+]
+
+Here is a list of words to process:
+@string.Join(", ", @Model.Select( static x => $"{x.Id} {x.Phrase} [{x.PartOfSpeech}] ({string.Join(", ", x.Tags)})"))</textarea>
+        </div>
+    </div>
+    <div class="field">
+        <div class="control">
+            <button class="button" onclick="navigator.clipboard.writeText(document.getElementById('prompt').value)">
+                Copy to Clipboard
+            </button>
+        </div>
+    </div>
+    <div class="field">
+        <div class="control">
+            <textarea class="textarea" name="prompt-response"></textarea> 
+        </div>
+    </div>
+    <div class="field">
+        <div class="control">
+            <button class="button" type="submit">
+                Update Word List
+            </button>
+        </div>
+    </div> 
+</form>

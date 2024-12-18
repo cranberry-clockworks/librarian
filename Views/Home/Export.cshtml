@@ -4,14 +4,15 @@
     Layout = "_Layout";
 }
 
-<div class="box" id="export-view">
+<div class="block" id="message"></div>
+<div class="box">
     <h1 class="title is-4">Export cards to Anki</h1>
 
     @if (Model.Count > 0)
     {
         <form hx-post="/anki"
-              hx-target="#export-view"
-              hx-swap="outerHTML"
+              hx-target="#message"
+              hx-swap="innerHTML"
               id="decks">
             <div class="field">
                 <label class="label">Select Anki deck</label>

@@ -5,7 +5,10 @@
     Layout = "_Layout";
 }
 
-<form hx-patch="@($"/cards/{Uri.EscapeDataString(Model.Id.ToString())}")">
+<div class="block" id="message"></div>
+<form hx-patch="@($"/cards/{Uri.EscapeDataString(Model.Id.ToString())}")"
+      hx-target="#message"
+      hx-swap="innerHTML">
     <div class="card">
         <div class="card-header">
             <p class="card-header-title">Front</p>
@@ -13,7 +16,11 @@
         <div class="card-content">
             <div class="content has-text-centered">
                 <p>
-                    <i>@Model.PartOfSpeech</i> @if (@Model.Tags.Length > 0) { @($"{string.Join(", ", @Model.Tags)}")}
+                    <i>@Model.PartOfSpeech</i>
+                    @if (@Model.Tags.Length > 0)
+                    {
+                        @($"{string.Join(", ", @Model.Tags)}")
+                    }
                 </p>
                 <p>
                     <b>@Model.Phrase</b>
@@ -28,12 +35,16 @@
         <div class="card-content">
             <div class="content has-text-centered">
                 <p>
-                    <i>@Model.PartOfSpeech</i> @if (@Model.Tags.Length > 0) { @($"{string.Join(", ", @Model.Tags)}")}
+                    <i>@Model.PartOfSpeech</i>
+                    @if (@Model.Tags.Length > 0)
+                    {
+                        @($"{string.Join(", ", @Model.Tags)}")
+                    }
                 </p>
                 <div class="control">
                     <input class="input has-text-centered"
-                           type="text" 
-                           name="translation" 
+                           type="text"
+                           name="translation"
                            value="@Model.Translation"/>
                 </div>
             </div>

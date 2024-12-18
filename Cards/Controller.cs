@@ -99,6 +99,6 @@ public class Controller : Microsoft.AspNetCore.Mvc.Controller
         cards[card.Id] = card;
         
         HttpContext.Session.SetCards(cards);
-        return Ok();
+        return PartialView("_Notification", "Card was successfully updated.");
     }
 }

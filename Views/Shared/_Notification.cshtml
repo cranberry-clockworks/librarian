@@ -1,0 +1,12 @@
+@model string
+
+<div class="notification is-success"
+     id="notification">
+    <button class="delete"
+            hx-get=""
+            hx-trigger="click, revealed delay:2s"
+            hx-target="closest .notification"
+            hx-swap="delete">
+    </button>
+    @Model
+</div>

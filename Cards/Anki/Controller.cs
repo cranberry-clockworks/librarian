@@ -11,6 +11,6 @@ public class Controller(IAnkiService service, ITemplateRenderer renderer)
     {
         var cards = await renderer.RenderAsync(HttpContext.Session.GetCards().Values, token);
         await service.AddCards(deck, cards, token);
-        return PartialView("_Exported");
+        return PartialView("_Notification", "Cards were successfully exported.");
     }
 }

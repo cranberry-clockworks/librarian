@@ -38,6 +38,5 @@ public class Card
     public int Id => HashCode.Combine(
         Phrase,
         PartOfSpeech,
-        string.Join("",Tags.OrderBy(static x => x)),
-        Translation);
+        string.Join("",Tags.OrderBy(static x => x)));
 }

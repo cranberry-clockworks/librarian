@@ -72,4 +72,33 @@ public class Controller : Microsoft.AspNetCore.Mvc.Controller
         HttpContext.Session.SetCards(cards);
         return PartialView("_WordListEntry", new KeyValuePair<int, Card>(card.Id, card));
     }
+
+    [HttpPatch("{cardId:int}")]
+    public IActionResult PatchTranslation([FromRoute] int cardId, [FromForm] string translation)
+    {
+        if (!ModelState.IsValid)
+        {
+            return ValidationProblem(ModelState);
+        }
+        
+        var cards = HttpContext.Session.GetCards();
+
+        if (!cards.TryGetValue(cardId, out var card))
+        {
+            return NotFound("Card is already exists.");
+        }
+
+        card = new Card
+        {
+            PartOfSpeech = card.PartOfSpeech,
+            Phrase = card.Phrase,
+            Translation = translation,
+            Tags = card.Tags
+        };
+
+        cards[card.Id] = card;
+        
+        HttpContext.Session.SetCards(cards);
+        return Ok();
+    }
 }

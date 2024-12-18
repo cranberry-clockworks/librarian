@@ -2,7 +2,8 @@
 
 <div class="field is-grouped">
     <div class="control is-expanded">
-        <p>@Model.Value.Phrase</p>
+        <a class="button is-white"
+           href="@($"edit/{Uri.EscapeDataString(Model.Key.ToString())}")">@Model.Value.Phrase</a>
     </div>
     <div class="tag">
         @Model.Value.PartOfSpeech.ToUpper()

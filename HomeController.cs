@@ -1,9 +1,12 @@
+using System.Net.Mime;
 using System.Net.Sockets;
 using Librarian.Cards;
 using Librarian.Cards.Anki;
 using Librarian.No.Dictionaries;
 using Microsoft.AspNetCore.Mvc;
+using Card = Librarian.Cards.Card;
 using IDictionaryService = Librarian.No.Dictionaries.IService;
+using ITranslationService = Librarian.No.Translations.IService;
 
 namespace Librarian;
 
@@ -11,7 +14,8 @@ namespace Librarian;
 [Route("/")]
 public class HomeController(
     ILogger<HomeController> logger,
-    IDictionaryService service,
+    IDictionaryService dictionaryService,
+    ITranslationService translationService,
     IAnkiConnect connect
 ) : Microsoft.AspNetCore.Mvc.Controller
 {
@@ -31,8 +35,8 @@ public class HomeController(
         CancellationToken token
     )
     {
-        var articles = (await service.GetArticlesAsync(phrase, pos, token)).Take(PageSize);
-        var definitions = await service.GetDefinitionsAsync(articles, token);
+        var articles = (await dictionaryService.GetArticlesAsync(phrase, pos, token)).Take(PageSize);
+        var definitions = await dictionaryService.GetDefinitionsAsync(articles, token);
         ViewBag.Cards = HttpContext.Session.GetCards();
         ViewBag.Search = phrase;
         ViewBag.Phrase = phrase;
@@ -49,8 +53,8 @@ public class HomeController(
         CancellationToken token
     )
     {
-        var articles = (await service.GetArticlesAsync(phrase, pos, token)).Skip(page * PageSize).Take(PageSize);
-        var definitions = await service.GetDefinitionsAsync(articles, token);
+        var articles = (await dictionaryService.GetArticlesAsync(phrase, pos, token)).Skip(page * PageSize).Take(PageSize);
+        var definitions = await dictionaryService.GetDefinitionsAsync(articles, token);
         ViewBag.Cards = HttpContext.Session.GetCards();
         ViewBag.Phrase = phrase;
         ViewBag.PartOfSpeech = pos.ToString();
@@ -74,5 +78,35 @@ public class HomeController(
 
         ViewBag.Cards = HttpContext.Session.GetCards();
         return View("Export", decks);
+    }
+    
+    
+    [HttpGet("edit/{cardId:int}")]
+    [Produces(MediaTypeNames.Text.Html)]
+    public async Task<IActionResult> GetCardAsync([FromRoute] int cardId, CancellationToken token)
+    {
+        var cards = HttpContext.Session.GetCards();
+        if (!cards.TryGetValue(cardId, out var card))
+        {
+            return NotFound($"Card with id '{cardId}' is not found.");
+        }
+
+        if (card.Translation == null)
+        {
+            card = new Card
+            {
+                Phrase = card.Phrase,
+                Tags = card.Tags,
+                PartOfSpeech = card.PartOfSpeech,
+                Translation = await translationService.TranslateAsync(card.Phrase, token)
+            };
+
+            cards[card.Id] = card;
+            
+            HttpContext.Session.SetCards(cards);
+        }
+
+        ViewBag.Cards = cards;
+        return View("Edit", card);
     }
 }

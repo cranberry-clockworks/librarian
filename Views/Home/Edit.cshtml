@@ -1,0 +1,50 @@
+@using System.Text.Encodings.Web
+@model Librarian.Cards.Card
+
+@{
+    Layout = "_Layout";
+}
+
+<form hx-patch="@($"/cards/{Uri.EscapeDataString(Model.Id.ToString())}")">
+    <div class="card">
+        <div class="card-header">
+            <p class="card-header-title">Front</p>
+        </div>
+        <div class="card-content">
+            <div class="content has-text-centered">
+                <p>
+                    <i>@Model.PartOfSpeech</i> @if (@Model.Tags.Length > 0) { @($"{string.Join(", ", @Model.Tags)}")}
+                </p>
+                <p>
+                    <b>@Model.Phrase</b>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <p class="card-header-title">Back</p>
+        </div>
+        <div class="card-content">
+            <div class="content has-text-centered">
+                <p>
+                    <i>@Model.PartOfSpeech</i> @if (@Model.Tags.Length > 0) { @($"{string.Join(", ", @Model.Tags)}")}
+                </p>
+                <div class="control">
+                    <input class="input has-text-centered"
+                           type="text" 
+                           name="translation" 
+                           value="@Model.Translation"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="block">
+        <div class="control">
+            <button class="button"
+                    type="submit">
+                Save
+            </button>
+        </div>
+    </div>
+</form>

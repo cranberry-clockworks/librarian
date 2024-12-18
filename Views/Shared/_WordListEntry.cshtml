@@ -3,13 +3,13 @@
 <div class="field is-grouped">
     <div class="control is-expanded">
         <a class="button is-white"
-           href="@($"edit/{Uri.EscapeDataString(Model.Key.ToString())}")">@Model.Value.Phrase</a>
+           href="@($"/edit/{Uri.EscapeDataString(Model.Key.ToString())}")">@Model.Value.Phrase</a>
     </div>
     <div class="tag">
         @Model.Value.PartOfSpeech.ToUpper()
     </div>
     <button class="delete"
-            hx-delete=@($"cards/{Uri.EscapeDataString(Model.Key.ToString())}")
+            hx-delete=@($"/cards/{Uri.EscapeDataString(Model.Key.ToString())}")
             hx-target="closest div"
             hx-swap="outerHTML">
     </button>

@@ -3,6 +3,7 @@ using Librarian.Cards.Anki;
 using Librarian.No.Dictionaries;
 using Librarian.No.Pronunciations;
 using Librarian.No.Translations;
+using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -27,6 +28,10 @@ var app = builder.Build();
 app.UseRouting();
 app.UseSession();
 app.UseStaticFiles();
+
+StaticWebAssetsLoader.UseStaticWebAssets(app.Environment, builder.Configuration);
+
 app.MapControllers();
+
 
 app.Run();

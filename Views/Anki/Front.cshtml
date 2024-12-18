@@ -1,4 +1,7 @@
-<i>@ViewBag.PartOfSpeech (@ViewBag.Tags)</i><br/>
+@{
+    var tags = (ViewBag.Tags as IEnumerable<string> ?? Array.Empty<string>()).ToList();
+}
+<i>@ViewBag.PartOfSpeech @if (tags.Any()) { @($"({string.Join(", ", tags)})") }</i><br/>
 <br/>
 <b>@ViewBag.Phrase</b>
 <br/>

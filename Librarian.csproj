@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>true</InvariantGlobalization>
         <UserSecretsId>99f62a0c-82a6-457d-bb6a-1aea76fecaf1</UserSecretsId>
+        <TargetFramework>net9.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,9 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Update="wwwroot\css\cards.css">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </Content>
+      <Folder Include="wwwroot\" />
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,25 @@
+@using Librarian.Cards
+<div class="box">
+    <h1 class="title is-4">
+        Words
+    </h1>
+    <div class="block" id="word-list-container">
+        @{
+            IReadOnlyDictionary<int, Card> cards = ViewBag.Cards ?? new Dictionary<int, Card>();
+            @foreach (var card in cards)
+            {
+                @await Html.PartialAsync("_WordListEntry", card)
+            }
+        }
+    </div>
+    <div class="buttons is-right">
+        <a class="button" href="/export">Export</a>
+        <a class="button" href="/refine">Refine</a>
+        <button class="button is-danger is-outlined"
+                hx-delete="/cards"
+                hx-target="#word-list-container"
+                hx-swap="innerHTML">
+            Remove All
+        </button>
+    </div>
+</div>

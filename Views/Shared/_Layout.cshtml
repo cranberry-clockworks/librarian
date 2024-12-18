@@ -2,34 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewData["Title"]</title>
-    @await RenderSectionAsync("Styles", false)
     <script
         src="https://unpkg.com/htmx.org@2.0.3"
         integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq"
         crossorigin="anonymous">
     </script>
-    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/search-bar.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/search-result.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/cards.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/export.css"/> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
 </head>
 <body>
-<div class="row">
-    <div class="column left">
-        @await Html.PartialAsync("_Cards")
-    </div>
 
-    <div class="column right">
-        <div>
-            @await Html.PartialAsync("_SearchBar")
+<section class="section">
+    <div class="columns is-desktop">
+        <div class="column is-two-thirds">
+            <div class="block">
+                @await Html.PartialAsync("_SearchBar")
+            </div>
+            <div class="block">
+                @RenderBody()
+            </div>
         </div>
-        <div id="main-view">
-            @RenderBody()
+        <div class="column">
+            @await Html.PartialAsync("_WordList")
         </div>
     </div>
-</div>
+</section>
 
 </body>
 </html>

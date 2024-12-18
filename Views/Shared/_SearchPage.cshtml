@@ -1,56 +1,85 @@
-@model IReadOnlyCollection<Librarian.No.Dictionaries.Definition>
-
-@foreach (var definition in Model)
+@model IEnumerable<Librarian.No.Dictionaries.Definition>
+@foreach (var definition in @Model)
 {
-    <div class="definition">
-        <div class="small">@definition.Entry</div>
-        @foreach (var inflection in definition.Inflections)
+    <div class="box">
+        <div class="tags">
+            <div class="tag is-primary is-uppercase">
+                @definition.PartOfSpeech
+            </div>
+            <div class="tag is-light">
+                @definition.Entry
+            </div>
+        </div>
+        @for (var i = 0; i < definition.Inflections.Count; ++i)
         {
+            var inflection = definition.Inflections[i];
             <form hx-post="/cards"
-                  hx-target="#cards-container"
+                  hx-target="#word-list-container"
                   hx-swap="beforeend"
-                  class="inflection">
-                <div class="title">
-                    <input
-                        name="phrase"
-                        type="text"
-                        readonly
-                        value="@inflection.Phrase">
-                    <input
-                        name="part-of-speech"
-                        type="text"
-                        readonly
-                        value="@definition.PartOfSpeech">
-                    <input
-                        name="tags"
-                        type="text"
-                        readonly
-                        value="@(string.Join(", ", inflection.Tags))">
+                  class="block inflection">
+
+                <input name="part-of-speech"
+                       type="hidden"
+                       value="@definition.PartOfSpeech"/>
+                <input name="phrase"
+                       type="hidden"
+                       value="@inflection.Phrase">
+
+                <div class="columns is-vcentered">
+                    <div class="column is-half">
+                        <h3 class="title is-4 mb-0">
+                            <b>@inflection.Phrase</b>
+                        </h3>
+                    </div>
+                    <div class="column is-flex is-justify-content-flex-end">
+                        <div class="tags">
+                            @foreach (var tag in @inflection.Tags)
+                            {
+                                <div class="tag">
+                                    @tag
+                                </div>
+                                <input name="tags"
+                                       type="hidden"
+                                       value="@tag"/>
+                            }
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <input type="submit" class="add-button" value="Add"/>
-
-                    <button onclick="this.querySelector('audio').play()"
-                            type="button">
-                        Pronounce
-                        <audio preload="none">
-                            <source src="@($"/no/pronunciations/{Uri.EscapeDataString(inflection.Phrase)}")"
-                                    type="audio/mpeg">
-                        </audio>
+                <div class="field is-grouped">
+                    <button class="button is-small"
+                            type="submit">
+                        <span class="icon is-small">
+                            <i class="fas fa-plus"></i>
+                        </span>
                     </button>
-
-                    <button
-                        hx-get="@($"/no/translations/{Uri.EscapeDataString(inflection.Phrase)}")"
-                        hx-target="this"
-                        hx-swap="outerHTML"
-                        type="button">
-                        Translate
+                    <button class="button is-small"
+                            onclick="this.nextElementSibling.play()">
+                        <span class="icon is-small">
+                            <i class="fa-solid fa-circle-play"></i>
+                        </span>
+                    </button>
+                    <audio preload="none">
+                        <source src="@($"/no/pronunciations/{Uri.EscapeDataString(@inflection.Phrase)}")"
+                                type="audio/mpeg">
+                    </audio>
+                    <button class="button is-small"
+                            hx-get="@($"/no/translations/{Uri.EscapeDataString(@inflection.Phrase)}")"
+                            hx-target="this"
+                            hx-swap="outerHTML">
+                        <span class="icon is-small">
+                            <i class="fa-solid fa-language"></i>
+                        </span>
                     </button>
                 </div>
             </form>
+            if (i < definition.Inflections.Count - 1)
+            {
+                <hr/>
+            }
         }
     </div>
 }
+
 <div hx-get="/search/more?phrase=@(Uri.EscapeDataString(ViewBag.Phrase))&pos=@(Uri.EscapeDataString(ViewBag.PartOfSpeech))&page=@ViewBag.NextPage"
      hx-trigger="revealed"
      hx-target="this"

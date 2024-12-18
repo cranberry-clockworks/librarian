@@ -1,25 +1,36 @@
 @using Librarian.No.Dictionaries
 
-<form 
-    action="/search"
-    method="get"
->
-    <div id="search-bar">
-        <input name="phrase" placeholder="Enter a word to search" required="required" value="@ViewBag.Search">
+<form class="block"
+      action="/search"
+      method="get">
+    <div class="control has-icons-left">
+        <input
+            class="input is-large"
+            name="phrase"
+            placeholder="Enter a word to search"
+            required="required"
+            value="@ViewBag.Search">
+        <span class="icon is-medium is-left">
+            <i class="fas fa-search"></i>
+        </span>
     </div>
-    <div>
+    <div class="field is-grouped is-grouped-multiline">
         @{
             var entries = PartOfSpeechExtensions.SupportedPartOfSpeeches;
             for (var i = 0; i < entries.Count; ++i)
             {
-                <input 
-                    class="pos"
-                    id="@entries[i]" 
-                    name="pos" 
-                    type="radio" 
-                    value="@entries[i]"
-                    checked="@(i == 0)"/>
-                <label for="@entries[i]">@entries[i]</label> 
+                <div class="control">
+                    <label for="@entries[i]">
+                        <input
+                            class="radio"
+                            id="@entries[i]"
+                            name="pos"
+                            type="radio"
+                            value="@entries[i]"
+                            checked="@(i == 0)">
+                        @entries[i]
+                    </label>
+                </div>
             }
         }
     </div>

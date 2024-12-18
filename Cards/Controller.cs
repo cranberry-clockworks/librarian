@@ -70,6 +70,6 @@ public class Controller : Microsoft.AspNetCore.Mvc.Controller
         }
 
         HttpContext.Session.SetCards(cards);
-        return PartialView("_Card", new KeyValuePair<int, Card>(card.Id, card));
+        return PartialView("_WordListEntry", new KeyValuePair<int, Card>(card.Id, card));
     }
 }

@@ -18,7 +18,7 @@ public class Card
     /// Additional tags related to the part of speech or phrase.
     /// </summary>
     [FromForm(Name = "tags")]
-    public string? Tags { get; init; }
+    public string[] Tags { get; init; } = Array.Empty<string>();
 
     /// <summary>
     /// Part of speech of the <see cref="Phrase"/>.
@@ -35,5 +35,9 @@ public class Card
     /// <summary>
     /// The ID that represent the card uniquely.
     /// </summary>
-    public int Id => HashCode.Combine(Phrase, PartOfSpeech, Tags, Translation);
+    public int Id => HashCode.Combine(
+        Phrase,
+        PartOfSpeech,
+        string.Join("",Tags.OrderBy(static x => x)),
+        Translation);
 }

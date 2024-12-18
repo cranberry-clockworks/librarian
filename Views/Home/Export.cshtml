@@ -4,8 +4,8 @@
     Layout = "_Layout";
 }
 
-<div id="export-view">
-    <h1>Export</h1>
+<div class="box" id="export-view">
+    <h1 class="title is-4">Export cards to Anki</h1>
 
     @if (Model.Count > 0)
     {
@@ -13,23 +13,31 @@
               hx-target="#export-view"
               hx-swap="outerHTML"
               id="decks">
-            @for (var i = 0; i < Model.Count; ++i)
-            {
-                var deck = Model[i];
+            <div class="field">
+                <label class="label">Select Anki deck</label>
+                @for (var i = 0; i < Model.Count; ++i)
+                {
+                    var deck = Model[i];
 
-                <div id="deck-container">
-                    <label class="deck">
-                        <input class="radio" type="radio" name="deck" value="@deck" @(i == 0 ? "checked" : "")>@deck
-                    </label>
+                    <div class="control">
+                        <label class="radio">
+                            <input type="radio" name="deck" value="@deck" @(i == 0 ? "checked" : "")/>
+                            @deck
+                        </label>
+                    </div>
+                }
+                <div class="control">
+                    <button class="button" type="submit">Export</button>
                 </div>
-            }
-            <input type="submit" value="Export"/>
+            </div>
         </form>
     }
     else
     {
-        <div>
-            <p>No decks were found. Check if Anki is running on your machine.</p>
-        </div>
+        <article class="message is-warning">
+            <div class="message-body">
+                No decks were found. Check if Anki is running on your machine.
+            </div>
+        </article>
     }
 </div>

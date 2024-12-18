@@ -1,0 +1,15 @@
+@model KeyValuePair<int, Librarian.Cards.Card>
+
+<div class="field is-grouped">
+    <div class="control is-expanded">
+        <p>@Model.Value.Phrase</p>
+    </div>
+    <div class="tag">
+        @Model.Value.PartOfSpeech.ToUpper()
+    </div>
+    <button class="delete"
+            hx-delete=@($"cards/{Uri.EscapeDataString(Model.Key.ToString())}")
+            hx-target="closest div"
+            hx-swap="outerHTML">
+    </button>
+</div>

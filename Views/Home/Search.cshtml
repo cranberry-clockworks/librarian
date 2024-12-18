@@ -1,8 +1,25 @@
+@using Librarian.No.Dictionaries
 @model IReadOnlyCollection<Librarian.No.Dictionaries.Definition>
 @{
-    Layout = "_Layout";
+      Layout = "_Layout";
 }
 
-<div id="search-results">
-    @await Html.PartialAsync("_SearchPage", Model)
-</div>
+@await Html.PartialAsync("_SearchPage", 
+      new []
+            {
+                  new Definition
+                  {
+                        Entry = DateOnly.FromDateTime(DateTime.Now),
+                        Inflections =
+                        [
+                              new Inflection
+                              {
+                                    Phrase = @ViewBag.Search,
+                                    Tags = []
+                              }
+                        ],
+                        PartOfSpeech = "phrase"
+                  }
+            }
+            .Concat(Model)
+)

@@ -76,7 +76,11 @@ public class Controller : Microsoft.AspNetCore.Mvc.Controller
     }
 
     [HttpPatch("{cardId:int}")]
-    public IActionResult PatchTranslation([FromRoute] int cardId, [FromForm] string translation)
+    public IActionResult PatchTranslation(
+        [FromRoute] int cardId,
+        [FromForm] string translation,
+        [FromForm(Name = "example-en")] string enExample,
+        [FromForm(Name = "example-no")] string noExample)
     {
         if (!ModelState.IsValid)
         {
@@ -93,6 +97,8 @@ public class Controller : Microsoft.AspNetCore.Mvc.Controller
         card = card with 
         {
             Translation = translation,
+            EnglishUsageExample = enExample,
+            NorwegianUsageExample = noExample
         };
 
         cards[card.Id] = card;

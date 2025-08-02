@@ -33,5 +33,5 @@ StaticWebAssetsLoader.UseStaticWebAssets(app.Environment, builder.Configuration)
 
 app.MapControllers();
 
-
 app.Run();
+

@@ -5,9 +5,14 @@ defmodule Librarian.Scribe do
     with {:ok, template_path} <- parse_arguments(argv),
          {:ok, template} <- File.read(template_path),
          input <- IO.read(:stdio, :eof),
-         {:ok, bind} <- Jason.decode(input) do
-      EEx.eval_string(template, assigns: bind) |> IO.puts()
+         {:ok, entries} <- Jason.decode(input) do
+      for entry <- entries do
+        EEx.eval_string(template, assigns: entry) |> IO.puts()
+      end
+    else
+      {:error, reason} -> IO.puts(reason)
     end
+  
   end
 
   defp parse_arguments(argv) do

@@ -1,0 +1,2 @@
+Foo <%= assigns["hello"] %>
+

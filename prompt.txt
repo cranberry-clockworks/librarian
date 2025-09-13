@@ -1,1 +1,29 @@
-Generate the dictionary entries for the list of Norwegian words in the following format: [ { "native": "et epple", "phonetics": "/ˈeːplə/", "translation": "яблоко", "tag": "noun, masucline", "usageNative": "Han spiste et epple", "usageTranslated": "Он съел яблоко" }, ... ] For the phonetics use bokmål dialect (Oslo). Use one senetence for an example. For mention verbs provide all conjugations (inf, pres if unsual, pretertium, perfectum with har). Use russian as a target for translation. For nouns use singular indefinite form. If there are duplications, skip. Here is a list of words:
+Generate the dictionary entries for the list of Norwegian words in the following JSON format:
+[
+    {
+        "native": "et epple",
+        "phonetics": "/ˈeːplə/",
+        "translation": "яблоко",
+        "tag": "noun, masucline",
+        "usageNative": "Han spiste et epple",
+        "usageTranslated": "Он съел яблоко"
+    },
+    ...
+]
+
+Use Russian as the language for translation.
+
+Use one sentence for an example.
+
+For the phonetics, use bokmål dialect (Oslo). 
+
+For verbs create separate entries for each conjugation: presens, pretertium, perfectum with har. State the exact conjugation in the tag (e.g. "verb, preteritum"). Prefer -et ending rather than -a for the preteritum, to stick to the bokmål.
+
+For nouns, use singular indefinite form with proper article e.g "ei bok" or "en fisk". Prefer feminine noun version over masculine, if it exists.
+
+If there are duplications, skip.
+
+Output only JSON, with full words, if possible (If not, split into several chunks).
+
+Here is a list of words:
+

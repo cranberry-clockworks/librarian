@@ -44,7 +44,7 @@ async Task<int> RunPackAndReturnExitCode(PackVerb pack)
             @"
 <div>
     <h1>{{native}}</h1>
-    <p><em>{{phonetics}}</em></p>
+    <p>{{phonetics}}</p>
     <small>{{tag}}</small>
     <br/>
     <p>{{usage}}</p>

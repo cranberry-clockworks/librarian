@@ -6,6 +6,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Scriban;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
+using System.Linq;
 
 var exitCode = await Parser
     .Default.ParseArguments<PackVerb, ImportVerb>(args)
@@ -18,8 +20,8 @@ var exitCode = await Parser
 Environment.Exit(exitCode);
 
 [UnconditionalSuppressMessage(
-    "Trimming", 
-    "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", 
+    "Trimming",
+    "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code",
     Justification = "Using JsonSerializerContext for AOT compatibility"
 )]
 async Task<int> RunPackAndReturnExitCode(PackVerb pack)
@@ -54,6 +56,8 @@ async Task<int> RunPackAndReturnExitCode(PackVerb pack)
 <div>
     <h1>{{translation}}</h1>
     <small>{{tag}}</small>
+    <br/>
+    <p>{{usage}}</p>
 </div>"
         );
 
@@ -67,7 +71,7 @@ async Task<int> RunPackAndReturnExitCode(PackVerb pack)
                     native = word.Native,
                     phonetics = word.Phonetics,
                     tag = word.Tag,
-                    usage = word.Usage
+                    usage = word.UsageNative
                 }
             );
 
@@ -75,7 +79,8 @@ async Task<int> RunPackAndReturnExitCode(PackVerb pack)
                 new
                 {
                     translation = word.Translation,
-                    tag = word.Tag
+                    tag = word.Tag,
+                    usage = word.UsageTranslated
                 }
             );
 
@@ -89,7 +94,7 @@ async Task<int> RunPackAndReturnExitCode(PackVerb pack)
         }
 
         var json = JsonSerializer.Serialize(
-            ankiCards,
+            ankiCards.ToArray(),
             AppJsonContext.Default.AnkiNoteArray
         );
 
@@ -186,21 +191,24 @@ async Task<int> ImportCardsAndReturnExitCode(ImportVerb import)
 
         using var client = new HttpClient();
 
-        var notes = cards.Select(card => new
+        // Build concrete AddNote[] array instead of anonymous objects
+        var notes = cards.Select(card => new AddNote
         {
-            deckName = import.Deck,
-            modelName = import.NoteType,
-            fields = new { Front = card.Front, Back = card.Back },
-            tags =
-                import.Tags?.Split(',').Select(t => t.Trim())
-                ?? Enumerable.Empty<string>()
-        });
+            DeckName = import.Deck,
+            ModelName = import.NoteType,
+            Fields = new NoteFields { Front = card.Front, Back = card.Back },
+            Tags = (import.Tags?.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(t => t.Trim())
+                        .Where(t => !string.IsNullOrEmpty(t))
+                        .ToArray())
+                    ?? Array.Empty<string>()
+        }).ToArray();
 
         var request = new AnkiConnectRequest
         {
             Action = "addNotes",
             Version = 6,
-            Params = new { notes }
+            Params = new AddNotesParams { Notes = notes }
         };
 
         var json = JsonSerializer.Serialize(
@@ -242,22 +250,46 @@ async Task<int> ImportCardsAndReturnExitCode(ImportVerb import)
     }
 }
 
+// --- JSON source-gen annotations: include the concrete types we now use ---
 [JsonSerializable(typeof(Entry[]))]
 [JsonSerializable(typeof(AnkiNote[]))]
 [JsonSerializable(typeof(AnkiConnectRequest))]
 [JsonSerializable(typeof(AnkiConnectResponse))]
 [JsonSerializable(typeof(DeckListResponse))]
+[JsonSerializable(typeof(AddNote[]))]
+[JsonSerializable(typeof(AddNotesParams))]
+[JsonSerializable(typeof(NoteFields))]
 [JsonSourceGenerationOptions(
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     PropertyNameCaseInsensitive = true
 )]
 internal partial class AppJsonContext : JsonSerializerContext { }
 
+// --- concrete types for Anki 'addNotes' payload ---
+public class AddNotesParams
+{
+    public required AddNote[] Notes { get; set; }
+}
+
+public class AddNote
+{
+    public required string DeckName { get; set; }
+    public required string ModelName { get; set; }
+    public required NoteFields Fields { get; set; }
+    public string[]? Tags { get; set; }
+}
+
+public class NoteFields
+{
+    public required string Front { get; set; }
+    public required string Back { get; set; }
+}
+
 public class AnkiConnectRequest
 {
     public required string Action { get; set; }
     public required int Version { get; set; }
-    public object? Params { get; set; }
+    public AddNotesParams? Params { get; set; }
 }
 
 public class AnkiConnectResponse
@@ -284,7 +316,8 @@ public class Entry
     public required string Phonetics { get; set; }
     public required string Translation { get; set; }
     public required string Tag { get; set; }
-    public required string Usage { get; set; }
+    public required string UsageNative { get; set; }
+    public required string UsageTranslated { get; set; }
 }
 
 [Verb("pack", HelpText = "Convert words JSON collection into the Anki deck format")]
@@ -324,3 +357,4 @@ public class ImportVerb
     )]
     public string Url { get; set; } = "http://localhost:8765";
 }
+

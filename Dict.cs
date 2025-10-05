@@ -41,24 +41,22 @@ async Task<int> RunPackAndReturnExitCode(PackVerb pack)
         }
 
         var frontTemplate = Template.Parse(
-            @"
-<div>
-    <h1>{{native}}</h1>
-    <p>{{phonetics}}</p>
-    <small>{{tag}}</small>
-    <br/>
-    <p>{{usage}}</p>
-</div>"
+@"
+<h3>{{native}}</h3>
+<p>/{{phonetics}}/</p>
+<small>{{tag}}</small>
+<br/>
+<p>{{usage}}</p>
+"
         );
 
         var backTemplate = Template.Parse(
-            @"
-<div>
-    <h1>{{translation}}</h1>
-    <small>{{tag}}</small>
-    <br/>
-    <p>{{usage}}</p>
-</div>"
+@"
+<h3>{{translation}}</h3>
+<small>{{tag}}</small>
+<br/>
+<p>{{usage}}</p>
+"
         );
 
         var ankiCards = new List<AnkiNote>();

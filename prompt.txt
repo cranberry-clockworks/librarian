@@ -2,28 +2,39 @@ Generate the dictionary entries for the list of Norwegian words in the following
 [
     {
         "native": "et epple",
-        "phonetics": "/ˈeːplə/",
+        "phonetics": "ˈeːplə",
         "translation": "яблоко",
-        "tag": "noun, masucline",
+        "tag": "noun, masculine",
         "usageNative": "Han spiste et epple",
         "usageTranslated": "Он съел яблоко"
     },
     ...
 ]
 
-Use Russian as the language for translation.
+Use Russian as the language for translation. Provide several main translations to form semantic field.
 
-Use one sentence for an example.
+Use one sentence for an example in `usageNative` and `usageTranslated`.
 
 For the phonetics, use bokmål dialect (Oslo). 
 
-For verbs create separate entries for each conjugation: presens, pretertium, perfectum with har. State the exact conjugation in the tag (e.g. "verb, preteritum"). Prefer -et ending rather than -a for the preteritum, to stick to the bokmål.
+For verbs list all conjugations: presens, pretertium, perfectum with har, for example:
+{
+  "native": "å gjenta – gjentar – gjentok – har gjentatt",
+  "phonetics": "<insert correct phonetics for all words from native here>",
+  "translation": "повторять, вновь произносить",
+  "tag": "verb",
+  "usageNative": "Kan du gjenta siste setning?",
+  "usageTranslated": "Можешь повторить последнее предложение?"
+},
 
-For nouns, use singular indefinite form with proper article e.g "ei bok" or "en fisk". Prefer feminine noun version over masculine, if it exists.
+Prefer -et ending rather than -a for the preteritum, to stick to the bokmål.
 
-If there are duplications, skip.
+For nouns, use singular indefinite form with proper article e.g "ei bok" or "en fisk". Prefer most common version if both feminine and masculine versions exist.
+
+If there are duplications in the input, output only one of them. Correct if input word is misspeled.
 
 Output only JSON, with full words, if possible (If not, split into several chunks).
 
-Here is a list of words:
+Here is a list of words, with some contaxt in which form it was encountered:
+
 

@@ -2,7 +2,7 @@ Generate the dictionary entries for the list of Norwegian words in the following
 [
     {
         "native": "et epple",
-        "phonetics": "ˈeːplə",
+        "phonetics": "[ˈeːplə]",
         "translation": "яблоко",
         "tag": "noun, masculine",
         "usageNative": "Han spiste et epple",
@@ -20,7 +20,7 @@ For the phonetics, use bokmål dialect (Oslo). 
 For verbs list all conjugations: presens, pretertium, perfectum with har, for example:
 {
   "native": "å gjenta – gjentar – gjentok – har gjentatt",
-  "phonetics": "<insert correct phonetics for all words from native here>",
+  "phonetics": "[ˈjɛntɑ] – [ˈjɛntɑːr] – [ˈjɛntuːk] – [ˈhɑːr ˈjɛntɑt]",
   "translation": "повторять, вновь произносить",
   "tag": "verb",
   "usageNative": "Kan du gjenta siste setning?",

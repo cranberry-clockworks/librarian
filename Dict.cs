@@ -1,5 +1,5 @@
 #:package CommandLineParser@2.9.1
-#:package Scriban@6.3.0
+#:package Scriban@7.1.0
 
 using CommandLine;
 using System.Text.Json;
